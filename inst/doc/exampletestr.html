@@ -12,7 +12,7 @@
 
 <meta name="author" content="Rory Nolan" />
 
-<meta name="date" content="2017-03-18" />
+<meta name="date" content="2017-04-12" />
 
 <title>exampletestr</title>
 
@@ -70,24 +70,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">exampletestr</h1>
 <h4 class="author"><em>Rory Nolan</em></h4>
-<h4 class="date"><em>2017-03-18</em></h4>
+<h4 class="date"><em>2017-04-12</em></h4>
 
 
 
 <div id="in-a-nutshell" class="section level2">
 <h2>In a nutshell</h2>
-<p>The primary use of <code>exampletestr</code> is from every file in the <code>R/</code> directory of a package, to create a corresponding <em>shell</em> of a test file (something to get you started making tests (for use with <code>testthat</code>)) that will have to be filled in to create a fully functioning test file. This can be done for the whole package at once with <code>make_tests_shells_pkg()</code> or for individual files with <code>make_tests_shells_file()</code>. These tests are created by using the examples in the roxygen documentation of your package (yes, you must use <code>roxygen2</code> to use this package) as a basis for tests. I have often (but not always) found that I test my functions manually by making sure my examples work as intended, so why not use these as a basis for proper unit testing?</p>
+<p>The primary use of <code>exampletestr</code> is from every file in the <code>R/</code> directory of a package, to create a corresponding <em>shell</em> of a test file (something to get you started making tests (for use with <code>testthat</code>)) that will have to be filled in to create a fully functioning test file. This can be done for the whole package at once with <code>make_tests_shells_pkg()</code> or for individual files with <code>make_tests_shells_file()</code>. These tests are created by using the examples in the documentation of your package as a basis for tests. I have often (but not always) found that I test my functions manually by making sure my examples work as intended, so why not use these as a basis for proper unit testing?</p>
 </div>
 <div id="out-of-the-nutshell" class="section level2">
 <h2>Out of the nutshell</h2>
 <p>First, let’s set up a dummy package directory with just the <code>utils.R</code> file from the source code of the <code>exampletestr</code> package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(exampletestr)
 <span class="kw">library</span>(testthat)
-<span class="cf">if</span> (<span class="kw">dir.exists</span>(<span class="st">&quot;tempkg&quot;</span>)) <span class="kw">warning</span>(<span class="st">&quot;Do not proceed, you'll mess with your &quot;</span>,
-<span class="st">&quot;'tempkg' folder.&quot;</span>)
-<span class="kw">dir.create</span>(<span class="st">&quot;tempkg&quot;</span>)
 devtools<span class="op">::</span><span class="kw">create</span>(<span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
-<pre><code>#&gt; Creating package 'tempkg' in '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmp5N6aPk'</code></pre>
+<pre><code>#&gt; Creating package 'tempkg' in '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmp6DZ9YV'</code></pre>
 <pre><code>#&gt; No DESCRIPTION found. Creating with values:</code></pre>
 <pre><code>#&gt; Package: tempkg
 #&gt; Title: What the Package Does (one line, title case)
@@ -104,25 +101,37 @@ devtools<span class="op">::</span><span class="kw">create</span>(<span class="st
 <pre><code>#&gt; * Adding testthat to Suggests</code></pre>
 <pre><code>#&gt; * Creating `tests/testthat`.</code></pre>
 <pre><code>#&gt; * Creating `tests/testthat.R` from template.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.copy</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;exampletestr.R&quot;</span>, <span class="st">&quot;utils.R&quot;</span>), <span class="dt">package =</span> <span class="st">&quot;exampletestr&quot;</span>), 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.copy</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;utils.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;exampletestr&quot;</span>), 
           <span class="st">&quot;tempkg/R&quot;</span>)</code></pre></div>
-<pre><code>#&gt; [1] TRUE TRUE</code></pre>
+<pre><code>#&gt; [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">document</span>(<span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
+<pre><code>#&gt; Updating tempkg documentation</code></pre>
+<pre><code>#&gt; Loading tempkg</code></pre>
+<pre><code>#&gt; Updating roxygen version in /private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmp6DZ9YV/tempkg/DESCRIPTION</code></pre>
+<pre><code>#&gt; Writing NAMESPACE
+#&gt; Writing text_parse_error.Rd
+#&gt; Writing extract_expressions.Rd
+#&gt; Writing construct_expect_equal.Rd
+#&gt; Writing extract_examples_rd.Rd</code></pre>
 <p>The <code>utils.R</code> file looks like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#' Does evaluation of text give an error?</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#' Does parsing of text give an error?</span>
 <span class="co">#'</span>
 <span class="co">#' Can a character vector (where each line is treated as a line of R code) be</span>
-<span class="co">#' evaluated as an R expression (or several R expressions) without giving an</span>
+<span class="co">#' parsed as an R expression (or several R expressions) without giving an</span>
 <span class="co">#' error?</span>
 <span class="co">#'</span>
 <span class="co">#' @param text_expr The expression to be evaluated, as a character vector.</span>
 <span class="co">#'</span>
 <span class="co">#' @return `TRUE` if the code gives an error and `FALSE` otherwise.</span>
 <span class="co">#' @examples</span>
-<span class="co">#' text_eval_error(&quot;a &lt;- 1&quot;)</span>
-<span class="co">#' text_eval_error(&quot;a &lt;- &quot;)</span>
+<span class="co">#' text_parse_error(&quot;a &lt;- 1&quot;)</span>
+<span class="co">#' text_parse_error(&quot;a &lt;- &quot;)</span>
 <span class="co">#' @export</span>
-text_eval_error &lt;-<span class="st"> </span><span class="cf">function</span>(text_expr) {
-  <span class="kw">try</span>(<span class="kw">parse</span>(<span class="dt">text =</span> text_expr), <span class="dt">silent =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">inherits</span>(<span class="st">&quot;try-error&quot;</span>)
+text_parse_error &lt;-<span class="st"> </span><span class="cf">function</span>(text_expr) {
+  try_res &lt;-<span class="st"> </span><span class="kw">try</span>(<span class="kw">parse</span>(<span class="dt">text =</span> text_expr), <span class="dt">silent =</span> <span class="ot">TRUE</span>)
+  error &lt;-<span class="st"> </span><span class="kw">inherits</span>(try_res, <span class="st">&quot;try-error&quot;</span>)
+  <span class="cf">if</span> (error) <span class="kw">attr</span>(error, <span class="st">&quot;message&quot;</span>) &lt;-<span class="st"> </span><span class="kw">attr</span>(try_res, <span class="st">&quot;message&quot;</span>)
+  error
 }
 
 <span class="co">#' Text expression groups.</span>
@@ -131,59 +140,61 @@ text_eval_error &lt;-<span class="st"> </span><span class="cf">function</span>(t
 <span class="co">#' lines, where each group of lines is a valid R expression.</span>
 <span class="co">#'</span>
 <span class="co">#' @param text_expr A character vector.</span>
+<span class="co">#' @param remove_comments Should comments be removed?</span>
 <span class="co">#'</span>
 <span class="co">#' @return A list of character vectors, each of which can be evaluated as a</span>
 <span class="co">#'   valid R expression.</span>
 <span class="co">#' @examples</span>
 <span class="co">#' text_expr &lt;- c(&quot;a &lt;- 1&quot;,</span>
 <span class="co">#' &quot;fx &lt;- function(x) {&quot;,</span>
-<span class="co">#' &quot;paste('f', x)&quot;,</span>
-<span class="co">#' &quot;}&quot;)</span>
+<span class="co">#' &quot;  x + 1&quot;,</span>
+<span class="co">#' &quot;}  # this comment should disappear&quot;)</span>
 <span class="co">#' extract_expressions(text_expr)</span>
 <span class="co">#' @export</span>
-extract_expressions &lt;-<span class="st"> </span><span class="cf">function</span>(text_expr) {
+extract_expressions &lt;-<span class="st"> </span><span class="cf">function</span>(text_expr, <span class="dt">remove_comments =</span> <span class="ot">TRUE</span>) {
+  <span class="kw">stopifnot</span>(<span class="kw">length</span>(text_expr) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
   expr_groups &lt;-<span class="st"> </span><span class="kw">list</span>()
   i &lt;-<span class="st"> </span><span class="dv">1</span>
   <span class="cf">while</span> (i <span class="op">&lt;=</span><span class="st"> </span><span class="kw">length</span>(text_expr)) {
     j &lt;-<span class="st"> </span><span class="dv">0</span>
     expr &lt;-<span class="st"> </span>text_expr[i]
-    <span class="cf">while</span>(<span class="kw">text_eval_error</span>(expr)) {
+    <span class="cf">while</span>(<span class="kw">text_parse_error</span>(expr)) {
       j &lt;-<span class="st"> </span>j <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
       expr &lt;-<span class="st"> </span>text_expr[i<span class="op">:</span>(i <span class="op">+</span><span class="st"> </span>j)]
     }
     expr_groups &lt;-<span class="st"> </span><span class="kw">append</span>(expr_groups, <span class="kw">list</span>(expr))
     i &lt;-<span class="st"> </span>i <span class="op">+</span><span class="st"> </span>j <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
   }
-  expr_groups
+  <span class="cf">if</span> (remove_comments) {
+    expr_groups &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(expr_groups, <span class="op">~</span><span class="st"> </span>formatR<span class="op">::</span><span class="kw">tidy_source</span>(<span class="dt">text =</span> .,
+        <span class="dt">comment =</span> <span class="op">!</span>remove_comments, <span class="dt">arrow =</span> <span class="ot">TRUE</span>, <span class="dt">indent =</span> <span class="dv">2</span>, <span class="dt">output =</span> <span class="ot">FALSE</span>,
+        <span class="dt">width.cutoff =</span> <span class="dv">50</span>)) <span class="op">%&gt;%</span>
+<span class="st">      </span>purrr<span class="op">::</span><span class="kw">map</span>(getElement, <span class="st">&quot;text.tidy&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span>purrr<span class="op">::</span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">readLines</span>(<span class="kw">textConnection</span>(.)))
+    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(expr_groups)) {
+      <span class="cf">if</span> (filesstrings<span class="op">::</span><span class="kw">AllEqual</span>(expr_groups[[i]], <span class="kw">character</span>(<span class="dv">0</span>))) {
+        expr_groups[[i]] &lt;-<span class="st"> &quot;&quot;</span>
+      }
+    }
+  }
+  empties &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map_lgl</span>(expr_groups, <span class="op">~</span><span class="st"> </span><span class="kw">isTRUE</span>(<span class="kw">all.equal</span>(., <span class="st">&quot;&quot;</span>)))
+  expr_groups &lt;-<span class="st"> </span>expr_groups[<span class="op">!</span>empties]
+  <span class="kw">lapply</span>(expr_groups, stringr<span class="op">::</span>str_trim, <span class="dt">side =</span> <span class="st">&quot;right&quot;</span>)
+  <span class="co"># str_trim because sometimes formatR leaves unnecessary trailing whitespace</span>
 }
 
-<span class="co">#' Evaluate a text string</span>
+<span class="co">#' Construct the shell of an `expect_equal` expression.</span>
 <span class="co">#'</span>
-<span class="co">#' @param string The string to evaluate (as if it were a command).</span>
-<span class="co">#'</span>
-<span class="co">#' @examples</span>
-<span class="co">#' TextEval(&quot;3 + 4&quot;)</span>
-<span class="co">#' to.be.evaluated &lt;- &quot;var(c(1, 6, 8))&quot;</span>
-<span class="co">#' TextEval(to.be.evaluated)</span>
-<span class="co">#'</span>
-<span class="co">#' @export</span>
-TextEval &lt;-<span class="st"> </span><span class="cf">function</span>(string) {
-  <span class="kw">stopifnot</span>(<span class="kw">is.character</span>(string) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">length</span>(string) <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
-  <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text =</span> string))
-}
-
-<span class="co">#' Construct an `expect_equal` expression</span>
-<span class="co">#'</span>
-<span class="co">#' Construct an `expect_equal` expression from a character vector</span>
+<span class="co">#' Construct the shell an `expect_equal` expression from a character vector</span>
 <span class="co">#' containing an expression to be evaluated.</span>
 <span class="co">#'</span>
-<span class="co">#' @param text_expr A character vector of lines that, when executed produce a</span>
-<span class="co">#'   single output.</span>
+<span class="co">#' @param text_expr A character vector of lines that, when executed produce an</span>
+<span class="co">#'   output.</span>
 <span class="co">#'</span>
-<span class="co">#' @return A character vector. The lines of text containing the</span>
-<span class="co">#'   `expect_equal` code corresponding to the input, which will help to</span>
-<span class="co">#'   write the test file based on an example detailed with roxgen. Remember that</span>
-<span class="co">#'   this is something that you're intended to fill the gaps in later.</span>
+<span class="co">#' @return A character vector. The lines of text containing the `expect_equal`</span>
+<span class="co">#'   code (corresponding to the input `text_expr`), which will help to write the</span>
+<span class="co">#'   test file based on documentation examples. Remember that this is something</span>
+<span class="co">#'   that you're intended to fill the gaps in later.</span>
 <span class="co">#'</span>
 <span class="co">#' @examples</span>
 <span class="co">#' text_expr &lt;- c(&quot;sum(1, &quot;, &quot;2)&quot;)</span>
@@ -196,58 +207,116 @@ construct_expect_equal &lt;-<span class="st"> </span><span class="cf">function</
   l &lt;-<span class="st"> </span><span class="kw">length</span>(text_expr)
   text_expr[l] &lt;-<span class="st"> </span><span class="kw">paste0</span>(text_expr[l], <span class="st">&quot;, )&quot;</span>)
   text_expr
+}
+
+<span class="co">#' Extract examples from a `.Rd` file as a character vector.</span>
+<span class="co">#'</span>
+<span class="co">#' This is a convenient wrapper to [tools::Rd2ex] which actually returns a character vector of the examples in the `.Rd` file.</span>
+<span class="co">#'</span>
+<span class="co">#' @param rd_file_path The path to the `.Rd` file.</span>
+<span class="co">#'</span>
+<span class="co">#' @return A character vector.</span>
+<span class="co">#'</span>
+<span class="co">#' @examples</span>
+<span class="co">#' this_function_rd &lt;- system.file(&quot;extdata&quot;, &quot;extract_examples_rd.Rd&quot;,</span>
+<span class="co">#'                                 package = &quot;exampletestr&quot;)</span>
+<span class="co">#' extract_examples_rd(this_function_rd)</span>
+<span class="co">#' @export</span>
+extract_examples_rd &lt;-<span class="st"> </span><span class="cf">function</span>(rd_file_path) {
+  tc &lt;-<span class="st"> </span><span class="kw">textConnection</span>(<span class="st">&quot; &quot;</span>, <span class="st">&quot;w&quot;</span>)
+  tools<span class="op">::</span><span class="kw">Rd2ex</span>(rd_file_path, tc)
+  examples_lines &lt;-<span class="st"> </span><span class="kw">textConnectionValue</span>(tc)
+  <span class="kw">close</span>(tc)
+  examples_lines
 }</code></pre></div>
 <p>So let’s demonstrate <code>extract_examples</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">extract_examples</span>(<span class="st">&quot;utils&quot;</span>, <span class="dt">pkg_dir =</span> <span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
-<pre><code>#&gt; $text_eval_error
-#&gt; [1] &quot;text_eval_error(\&quot;a &lt;- 1\&quot;)&quot; &quot;text_eval_error(\&quot;a &lt;- \&quot;)&quot; 
+<pre><code>#&gt; $construct_expect_equal
+#&gt;  [1] &quot;### Name: construct_expect_equal&quot;                                 
+#&gt;  [2] &quot;### Title: Construct the shell of an 'expect_equal' expression.&quot;  
+#&gt;  [3] &quot;### Aliases: construct_expect_equal&quot;                              
+#&gt;  [4] &quot;&quot;                                                                 
+#&gt;  [5] &quot;### ** Examples&quot;                                                  
+#&gt;  [6] &quot;&quot;                                                                 
+#&gt;  [7] &quot;text_expr &lt;- c(\&quot;sum(1, \&quot;, \&quot;2)\&quot;)&quot;                              
+#&gt;  [8] &quot;cat(paste(text_expr, collapse = \&quot;\\n\&quot;))&quot;                        
+#&gt;  [9] &quot;construct_expect_equal(text_expr)&quot;                                
+#&gt; [10] &quot;cat(paste(construct_expect_equal(text_expr), collapse = \&quot;\\n\&quot;))&quot;
+#&gt; [11] &quot;&quot;                                                                 
+#&gt; [12] &quot;&quot;                                                                 
+#&gt; [13] &quot;&quot;                                                                 
+#&gt; 
+#&gt; $extract_examples_rd
+#&gt;  [1] &quot;### Name: extract_examples_rd&quot;                                           
+#&gt;  [2] &quot;### Title: Extract examples from a '.Rd' file as a character vector.&quot;    
+#&gt;  [3] &quot;### Aliases: extract_examples_rd&quot;                                        
+#&gt;  [4] &quot;&quot;                                                                        
+#&gt;  [5] &quot;### ** Examples&quot;                                                         
+#&gt;  [6] &quot;&quot;                                                                        
+#&gt;  [7] &quot;this_function_rd &lt;- system.file(\&quot;extdata\&quot;, \&quot;extract_examples_rd.Rd\&quot;,&quot;
+#&gt;  [8] &quot;                                package = \&quot;exampletestr\&quot;)&quot;             
+#&gt;  [9] &quot;extract_examples_rd(this_function_rd)&quot;                                   
+#&gt; [10] &quot;&quot;                                                                        
+#&gt; [11] &quot;&quot;                                                                        
+#&gt; [12] &quot;&quot;                                                                        
 #&gt; 
 #&gt; $extract_expressions
-#&gt; [1] &quot;text_expr &lt;- c(\&quot;a &lt;- 1\&quot;,&quot;     &quot;\&quot;fx &lt;- function(x) {\&quot;,&quot;      
-#&gt; [3] &quot;\&quot;paste('f', x)\&quot;,&quot;             &quot;\&quot;}\&quot;)&quot;                        
-#&gt; [5] &quot;extract_expressions(text_expr)&quot;
+#&gt;  [1] &quot;### Name: extract_expressions&quot;          
+#&gt;  [2] &quot;### Title: Text expression groups.&quot;     
+#&gt;  [3] &quot;### Aliases: extract_expressions&quot;       
+#&gt;  [4] &quot;&quot;                                       
+#&gt;  [5] &quot;### ** Examples&quot;                        
+#&gt;  [6] &quot;&quot;                                       
+#&gt;  [7] &quot;text_expr &lt;- c(\&quot;a &lt;- 1\&quot;,&quot;             
+#&gt;  [8] &quot;\&quot;fx &lt;- function(x) {\&quot;,&quot;               
+#&gt;  [9] &quot;\&quot;  x + 1\&quot;,&quot;                           
+#&gt; [10] &quot;\&quot;}  # this comment should disappear\&quot;)&quot;
+#&gt; [11] &quot;extract_expressions(text_expr)&quot;         
+#&gt; [12] &quot;&quot;                                       
+#&gt; [13] &quot;&quot;                                       
+#&gt; [14] &quot;&quot;                                       
 #&gt; 
-#&gt; $TextEval
-#&gt; [1] &quot;TextEval(\&quot;3 + 4\&quot;)&quot;                   
-#&gt; [2] &quot;to.be.evaluated &lt;- \&quot;var(c(1, 6, 8))\&quot;&quot;
-#&gt; [3] &quot;TextEval(to.be.evaluated)&quot;             
-#&gt; 
-#&gt; $construct_expect_equal
-#&gt; [1] &quot;text_expr &lt;- c(\&quot;sum(1, \&quot;, \&quot;2)\&quot;)&quot;                              
-#&gt; [2] &quot;cat(paste(text_expr, collapse = \&quot;\\n\&quot;))&quot;                        
-#&gt; [3] &quot;construct_expect_equal(text_expr)&quot;                                
-#&gt; [4] &quot;cat(paste(construct_expect_equal(text_expr), collapse = \&quot;\\n\&quot;))&quot;</code></pre>
+#&gt; $text_parse_error
+#&gt;  [1] &quot;### Name: text_parse_error&quot;                    
+#&gt;  [2] &quot;### Title: Does parsing of text give an error?&quot;
+#&gt;  [3] &quot;### Aliases: text_parse_error&quot;                 
+#&gt;  [4] &quot;&quot;                                              
+#&gt;  [5] &quot;### ** Examples&quot;                               
+#&gt;  [6] &quot;&quot;                                              
+#&gt;  [7] &quot;text_parse_error(\&quot;a &lt;- 1\&quot;)&quot;                  
+#&gt;  [8] &quot;text_parse_error(\&quot;a &lt;- \&quot;)&quot;                   
+#&gt;  [9] &quot;&quot;                                              
+#&gt; [10] &quot;&quot;                                              
+#&gt; [11] &quot;&quot;</code></pre>
 <p>Indeed we get all of the lines of the documentation examples. Now with <code>make_test_shell</code>, we turn it into something usable with <code>testthat</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lapply</span>(<span class="kw">extract_examples</span>(<span class="st">&quot;utils&quot;</span>, <span class="dt">pkg_dir =</span> <span class="st">&quot;tempkg&quot;</span>), make_test_shell, <span class="st">&quot;whatevs&quot;</span>)</code></pre></div>
-<pre><code>#&gt; $text_eval_error
-#&gt; [1] &quot;test_that(\&quot;whatevs\&quot;, {&quot;                     
-#&gt; [2] &quot;  expect_equal(text_eval_error(\&quot;a &lt;- 1\&quot;), )&quot;
-#&gt; [3] &quot;  expect_equal(text_eval_error(\&quot;a &lt;- \&quot;), )&quot; 
-#&gt; [4] &quot;})&quot;                                           
-#&gt; 
-#&gt; $extract_expressions
-#&gt; [1] &quot;test_that(\&quot;whatevs\&quot;, {&quot;                        
-#&gt; [2] &quot;  text_expr &lt;- c(\&quot;a &lt;- 1\&quot;,&quot;                    
-#&gt; [3] &quot;  \&quot;fx &lt;- function(x) {\&quot;,&quot;                      
-#&gt; [4] &quot;  \&quot;paste('f', x)\&quot;,&quot;                            
-#&gt; [5] &quot;  \&quot;}\&quot;)&quot;                                        
-#&gt; [6] &quot;  expect_equal(extract_expressions(text_expr), )&quot;
-#&gt; [7] &quot;})&quot;                                              
-#&gt; 
-#&gt; $TextEval
-#&gt; [1] &quot;test_that(\&quot;whatevs\&quot;, {&quot;                   
-#&gt; [2] &quot;  expect_equal(TextEval(\&quot;3 + 4\&quot;), )&quot;      
-#&gt; [3] &quot;  to.be.evaluated &lt;- \&quot;var(c(1, 6, 8))\&quot;&quot;   
-#&gt; [4] &quot;  expect_equal(TextEval(to.be.evaluated), )&quot;
-#&gt; [5] &quot;})&quot;                                         
-#&gt; 
-#&gt; $construct_expect_equal
+<pre><code>#&gt; $construct_expect_equal
 #&gt; [1] &quot;test_that(\&quot;whatevs\&quot;, {&quot;                                                           
 #&gt; [2] &quot;  text_expr &lt;- c(\&quot;sum(1, \&quot;, \&quot;2)\&quot;)&quot;                                              
 #&gt; [3] &quot;  expect_equal(cat(paste(text_expr, collapse = \&quot;\\n\&quot;)), )&quot;                        
 #&gt; [4] &quot;  expect_equal(construct_expect_equal(text_expr), )&quot;                                
 #&gt; [5] &quot;  expect_equal(cat(paste(construct_expect_equal(text_expr), collapse = \&quot;\\n\&quot;)), )&quot;
-#&gt; [6] &quot;})&quot;</code></pre>
+#&gt; [6] &quot;})&quot;                                                                                 
+#&gt; 
+#&gt; $extract_examples_rd
+#&gt; [1] &quot;test_that(\&quot;whatevs\&quot;, {&quot;                                                  
+#&gt; [2] &quot;  this_function_rd &lt;- system.file(\&quot;extdata\&quot;, \&quot;extract_examples_rd.Rd\&quot;,&quot;
+#&gt; [3] &quot;    package = \&quot;exampletestr\&quot;)&quot;                                           
+#&gt; [4] &quot;  expect_equal(extract_examples_rd(this_function_rd), )&quot;                   
+#&gt; [5] &quot;})&quot;                                                                        
+#&gt; 
+#&gt; $extract_expressions
+#&gt; [1] &quot;test_that(\&quot;whatevs\&quot;, {&quot;                                          
+#&gt; [2] &quot;  text_expr &lt;- c(\&quot;a &lt;- 1\&quot;, \&quot;fx &lt;- function(x) {\&quot;, \&quot;  x + 1\&quot;,&quot;
+#&gt; [3] &quot;    \&quot;}  # this comment should disappear\&quot;)&quot;                       
+#&gt; [4] &quot;  expect_equal(extract_expressions(text_expr), )&quot;                  
+#&gt; [5] &quot;})&quot;                                                                
+#&gt; 
+#&gt; $text_parse_error
+#&gt; [1] &quot;test_that(\&quot;whatevs\&quot;, {&quot;                      
+#&gt; [2] &quot;  expect_equal(text_parse_error(\&quot;a &lt;- 1\&quot;), )&quot;
+#&gt; [3] &quot;  expect_equal(text_parse_error(\&quot;a &lt;- \&quot;), )&quot; 
+#&gt; [4] &quot;})&quot;</code></pre>
 <p>This might look a little weird in the output but it’s really just</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">test_that</span>(<span class="st">&quot;whatevs&quot;</span>, {
   <span class="kw">expect_equal</span>(<span class="kw">text_eval_error</span>(<span class="st">&quot;a &lt;- 1&quot;</span>), )
@@ -257,54 +326,46 @@ construct_expect_equal &lt;-<span class="st"> </span><span class="cf">function</
 <p>We can make the unit tests <em>shell</em> file (<em>shell</em> because it needs to be filled in) via <code>make_tests_shell_file</code>. Running</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">make_tests_shells_file</span>(<span class="st">&quot;utils&quot;</span>, <span class="dt">pkg_dir =</span> <span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
 <p>outputs a <code>test_utils.R</code> file in the <code>tests/testthat</code> folder with contents</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">test_that</span>(<span class="st">&quot;text_eval_error works&quot;</span>, {
-  <span class="kw">expect_equal</span>(<span class="kw">text_eval_error</span>(<span class="st">&quot;a &lt;- 1&quot;</span>), )
-  <span class="kw">expect_equal</span>(<span class="kw">text_eval_error</span>(<span class="st">&quot;a &lt;- &quot;</span>), )
-})
-
-<span class="kw">test_that</span>(<span class="st">&quot;extract_expressions works&quot;</span>, {
-  text_expr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a &lt;- 1&quot;</span>,
-  <span class="st">&quot;fx &lt;- function(x) {&quot;</span>,
-  <span class="st">&quot;paste('f', x)&quot;</span>,
-  <span class="st">&quot;}&quot;</span>)
-  <span class="kw">expect_equal</span>(<span class="kw">extract_expressions</span>(text_expr), )
-})
-
-<span class="kw">test_that</span>(<span class="st">&quot;TextEval works&quot;</span>, {
-  <span class="kw">expect_equal</span>(<span class="kw">TextEval</span>(<span class="st">&quot;3 + 4&quot;</span>), )
-  to.be.evaluated &lt;-<span class="st"> &quot;var(c(1, 6, 8))&quot;</span>
-  <span class="kw">expect_equal</span>(<span class="kw">TextEval</span>(to.be.evaluated), )
-})
-
-<span class="kw">test_that</span>(<span class="st">&quot;construct_expect_equal works&quot;</span>, {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">test_that</span>(<span class="st">&quot;construct_expect_equal works&quot;</span>, {
   text_expr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;sum(1, &quot;</span>, <span class="st">&quot;2)&quot;</span>)
   <span class="kw">expect_equal</span>(<span class="kw">cat</span>(<span class="kw">paste</span>(text_expr, <span class="dt">collapse =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)), )
   <span class="kw">expect_equal</span>(<span class="kw">construct_expect_equal</span>(text_expr), )
   <span class="kw">expect_equal</span>(<span class="kw">cat</span>(<span class="kw">paste</span>(<span class="kw">construct_expect_equal</span>(text_expr), <span class="dt">collapse =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)), )
+})
+
+<span class="kw">test_that</span>(<span class="st">&quot;extract_examples_rd works&quot;</span>, {
+  this_function_rd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;extract_examples_rd.Rd&quot;</span>,
+    <span class="dt">package =</span> <span class="st">&quot;exampletestr&quot;</span>)
+  <span class="kw">expect_equal</span>(<span class="kw">extract_examples_rd</span>(this_function_rd), )
+})
+
+<span class="kw">test_that</span>(<span class="st">&quot;extract_expressions works&quot;</span>, {
+  text_expr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a &lt;- 1&quot;</span>, <span class="st">&quot;fx &lt;- function(x) {&quot;</span>, <span class="st">&quot;  x + 1&quot;</span>,
+    <span class="st">&quot;}  # this comment should disappear&quot;</span>)
+  <span class="kw">expect_equal</span>(<span class="kw">extract_expressions</span>(text_expr), )
+})
+
+<span class="kw">test_that</span>(<span class="st">&quot;text_parse_error works&quot;</span>, {
+  <span class="kw">expect_equal</span>(<span class="kw">text_parse_error</span>(<span class="st">&quot;a &lt;- 1&quot;</span>), )
+  <span class="kw">expect_equal</span>(<span class="kw">text_parse_error</span>(<span class="st">&quot;a &lt;- &quot;</span>), )
 })</code></pre></div>
 <p>which, for my purposes, I complete as</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">test_that</span>(<span class="st">&quot;text_eval_error works&quot;</span>, {
-  <span class="kw">expect_false</span>(<span class="kw">text_eval_error</span>(<span class="st">&quot;a &lt;- 1&quot;</span>))
-  <span class="kw">expect_true</span>(<span class="kw">text_eval_error</span>(<span class="st">&quot;a &lt;- &quot;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">test_that</span>(<span class="st">&quot;text_parse_error works&quot;</span>, {
+  <span class="kw">expect_false</span>(<span class="kw">text_parse_error</span>(<span class="st">&quot;a &lt;- 1&quot;</span>))
+  <span class="kw">expect_true</span>(<span class="kw">text_parse_error</span>(<span class="st">&quot;a &lt;- &quot;</span>))
 })
 
 <span class="kw">test_that</span>(<span class="st">&quot;extract_expressions works&quot;</span>, {
   text_expr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a &lt;- 1&quot;</span>,
-  <span class="st">&quot;fx &lt;- function(x) {&quot;</span>,
-  <span class="st">&quot;paste('f', x)&quot;</span>,
-  <span class="st">&quot;}&quot;</span>)
+                 <span class="st">&quot;fx &lt;- function(x) {&quot;</span>,
+                 <span class="st">&quot;  x + 1&quot;</span>,
+                 <span class="st">&quot;}&quot;</span>)
   <span class="kw">expect_equal</span>(<span class="kw">extract_expressions</span>(text_expr), <span class="kw">list</span>(
     <span class="st">&quot;a &lt;- 1&quot;</span>,
     <span class="kw">c</span>(<span class="st">&quot;fx &lt;- function(x) {&quot;</span>,
-      <span class="st">&quot;paste('f', x)&quot;</span>,
+      <span class="st">&quot;  x + 1&quot;</span>,
       <span class="st">&quot;}&quot;</span>)
   ))
-})
-
-<span class="kw">test_that</span>(<span class="st">&quot;TextEval works&quot;</span>, {
-  <span class="kw">expect_equal</span>(<span class="kw">TextEval</span>(<span class="st">&quot;3 + 4&quot;</span>), <span class="dv">7</span>)
-  to.be.evaluated &lt;-<span class="st"> &quot;var(c(1, 6, 8))&quot;</span>
-  <span class="kw">expect_equal</span>(<span class="kw">TextEval</span>(to.be.evaluated), <span class="kw">var</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">8</span>)))
 })
 
 <span class="kw">test_that</span>(<span class="st">&quot;construct_expect_equal works&quot;</span>, {
@@ -312,10 +373,11 @@ construct_expect_equal &lt;-<span class="st"> </span><span class="cf">function</
   <span class="kw">expect_equal</span>(<span class="kw">construct_expect_equal</span>(text_expr), <span class="kw">c</span>(<span class="st">&quot;expect_equal(sum(1, &quot;</span>,
                                                     <span class="st">&quot;2), )&quot;</span>))
 })</code></pre></div>
-<p>To create these test shell files for each file in the <code>R/</code> directory of your package, run</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(<span class="kw">tempdir</span>())
-<span class="kw">make_tests_shells_pkg</span>(<span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
-<p>I would like to stress that whilst unit testing should be automatic, the creation of these tests is a manual process, a manual check. This package is supposed to help you start making those tests. It is not supposed to create fully functioning tests automatically, nor can it help you to write every type of test you might want.</p>
+<p>To create these test shell files for each file in the <code>R/</code> directory of your package, run <code>make_tests_shells_pkg()</code>.</p>
+<div id="the-goal-is-not-fully-automated-unit-test-creation" class="section level3">
+<h3>The Goal is NOT Fully Automated Unit Test Creation</h3>
+<p>I would like to stress that whilst unit testing should be automatic, the creation of these tests is a manual process, a manual check. This package is supposed to help you <em>start</em> making those tests. It is not supposed to create fully functioning tests automatically, nor can it help you to write every type of test you might want.</p>
+</div>
 </div>
 
 

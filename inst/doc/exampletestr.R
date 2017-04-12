@@ -5,30 +5,31 @@ knitr::opts_knit$set(root.dir = tempdir())
 ## ----setup---------------------------------------------------------------
 library(exampletestr)
 library(testthat)
-if (dir.exists("tempkg")) warning("Do not proceed, you'll mess with your ",
-"'tempkg' folder.")
-dir.create("tempkg")
 devtools::create("tempkg")
 devtools::use_testthat("tempkg")
-file.copy(system.file("extdata", c("exampletestr.R", "utils.R"), package = "exampletestr"), 
+file.copy(system.file("extdata", "utils.R", package = "exampletestr"), 
           "tempkg/R")
+devtools::document("tempkg")
 
 ## ----Look at utils file, eval=FALSE--------------------------------------
-#  #' Does evaluation of text give an error?
+#  #' Does parsing of text give an error?
 #  #'
 #  #' Can a character vector (where each line is treated as a line of R code) be
-#  #' evaluated as an R expression (or several R expressions) without giving an
+#  #' parsed as an R expression (or several R expressions) without giving an
 #  #' error?
 #  #'
 #  #' @param text_expr The expression to be evaluated, as a character vector.
 #  #'
 #  #' @return `TRUE` if the code gives an error and `FALSE` otherwise.
 #  #' @examples
-#  #' text_eval_error("a <- 1")
-#  #' text_eval_error("a <- ")
+#  #' text_parse_error("a <- 1")
+#  #' text_parse_error("a <- ")
 #  #' @export
-#  text_eval_error <- function(text_expr) {
-#    try(parse(text = text_expr), silent = TRUE) %>% inherits("try-error")
+#  text_parse_error <- function(text_expr) {
+#    try_res <- try(parse(text = text_expr), silent = TRUE)
+#    error <- inherits(try_res, "try-error")
+#    if (error) attr(error, "message") <- attr(try_res, "message")
+#    error
 #  }
 #  
 #  #' Text expression groups.
@@ -37,59 +38,61 @@ file.copy(system.file("extdata", c("exampletestr.R", "utils.R"), package = "exam
 #  #' lines, where each group of lines is a valid R expression.
 #  #'
 #  #' @param text_expr A character vector.
+#  #' @param remove_comments Should comments be removed?
 #  #'
 #  #' @return A list of character vectors, each of which can be evaluated as a
 #  #'   valid R expression.
 #  #' @examples
 #  #' text_expr <- c("a <- 1",
 #  #' "fx <- function(x) {",
-#  #' "paste('f', x)",
-#  #' "}")
+#  #' "  x + 1",
+#  #' "}  # this comment should disappear")
 #  #' extract_expressions(text_expr)
 #  #' @export
-#  extract_expressions <- function(text_expr) {
+#  extract_expressions <- function(text_expr, remove_comments = TRUE) {
+#    stopifnot(length(text_expr) > 0)
 #    expr_groups <- list()
 #    i <- 1
 #    while (i <= length(text_expr)) {
 #      j <- 0
 #      expr <- text_expr[i]
-#      while(text_eval_error(expr)) {
+#      while(text_parse_error(expr)) {
 #        j <- j + 1
 #        expr <- text_expr[i:(i + j)]
 #      }
 #      expr_groups <- append(expr_groups, list(expr))
 #      i <- i + j + 1
 #    }
-#    expr_groups
+#    if (remove_comments) {
+#      expr_groups <- purrr::map(expr_groups, ~ formatR::tidy_source(text = .,
+#          comment = !remove_comments, arrow = TRUE, indent = 2, output = FALSE,
+#          width.cutoff = 50)) %>%
+#        purrr::map(getElement, "text.tidy") %>%
+#        purrr::map(~ readLines(textConnection(.)))
+#      for (i in seq_along(expr_groups)) {
+#        if (filesstrings::AllEqual(expr_groups[[i]], character(0))) {
+#          expr_groups[[i]] <- ""
+#        }
+#      }
+#    }
+#    empties <- purrr::map_lgl(expr_groups, ~ isTRUE(all.equal(., "")))
+#    expr_groups <- expr_groups[!empties]
+#    lapply(expr_groups, stringr::str_trim, side = "right")
+#    # str_trim because sometimes formatR leaves unnecessary trailing whitespace
 #  }
 #  
-#  #' Evaluate a text string
+#  #' Construct the shell of an `expect_equal` expression.
 #  #'
-#  #' @param string The string to evaluate (as if it were a command).
-#  #'
-#  #' @examples
-#  #' TextEval("3 + 4")
-#  #' to.be.evaluated <- "var(c(1, 6, 8))"
-#  #' TextEval(to.be.evaluated)
-#  #'
-#  #' @export
-#  TextEval <- function(string) {
-#    stopifnot(is.character(string) && length(string) == 1)
-#    eval(parse(text = string))
-#  }
-#  
-#  #' Construct an `expect_equal` expression
-#  #'
-#  #' Construct an `expect_equal` expression from a character vector
+#  #' Construct the shell an `expect_equal` expression from a character vector
 #  #' containing an expression to be evaluated.
 #  #'
-#  #' @param text_expr A character vector of lines that, when executed produce a
-#  #'   single output.
+#  #' @param text_expr A character vector of lines that, when executed produce an
+#  #'   output.
 #  #'
-#  #' @return A character vector. The lines of text containing the
-#  #'   `expect_equal` code corresponding to the input, which will help to
-#  #'   write the test file based on an example detailed with roxgen. Remember that
-#  #'   this is something that you're intended to fill the gaps in later.
+#  #' @return A character vector. The lines of text containing the `expect_equal`
+#  #'   code (corresponding to the input `text_expr`), which will help to write the
+#  #'   test file based on documentation examples. Remember that this is something
+#  #'   that you're intended to fill the gaps in later.
 #  #'
 #  #' @examples
 #  #' text_expr <- c("sum(1, ", "2)")
@@ -103,6 +106,28 @@ file.copy(system.file("extdata", c("exampletestr.R", "utils.R"), package = "exam
 #    text_expr[l] <- paste0(text_expr[l], ", )")
 #    text_expr
 #  }
+#  
+#  #' Extract examples from a `.Rd` file as a character vector.
+#  #'
+#  #' This is a convenient wrapper to [tools::Rd2ex] which actually returns a character vector of the examples in the `.Rd` file.
+#  #'
+#  #' @param rd_file_path The path to the `.Rd` file.
+#  #'
+#  #' @return A character vector.
+#  #'
+#  #' @examples
+#  #' this_function_rd <- system.file("extdata", "extract_examples_rd.Rd",
+#  #'                                 package = "exampletestr")
+#  #' extract_examples_rd(this_function_rd)
+#  #' @export
+#  extract_examples_rd <- function(rd_file_path) {
+#    tc <- textConnection(" ", "w")
+#    tools::Rd2ex(rd_file_path, tc)
+#    examples_lines <- textConnectionValue(tc)
+#    close(tc)
+#    examples_lines
+#  }
+#  
 
 ## ----Demonstrate extract_examples----------------------------------------
 extract_examples("utils", pkg_dir = "tempkg")
@@ -120,55 +145,47 @@ lapply(extract_examples("utils", pkg_dir = "tempkg"), make_test_shell, "whatevs"
 make_tests_shells_file("utils", pkg_dir = "tempkg")
 
 ## ----test_utils.R contents, eval=FALSE-----------------------------------
-#  test_that("text_eval_error works", {
-#    expect_equal(text_eval_error("a <- 1"), )
-#    expect_equal(text_eval_error("a <- "), )
-#  })
-#  
-#  test_that("extract_expressions works", {
-#    text_expr <- c("a <- 1",
-#    "fx <- function(x) {",
-#    "paste('f', x)",
-#    "}")
-#    expect_equal(extract_expressions(text_expr), )
-#  })
-#  
-#  test_that("TextEval works", {
-#    expect_equal(TextEval("3 + 4"), )
-#    to.be.evaluated <- "var(c(1, 6, 8))"
-#    expect_equal(TextEval(to.be.evaluated), )
-#  })
-#  
 #  test_that("construct_expect_equal works", {
 #    text_expr <- c("sum(1, ", "2)")
 #    expect_equal(cat(paste(text_expr, collapse = "\n")), )
 #    expect_equal(construct_expect_equal(text_expr), )
 #    expect_equal(cat(paste(construct_expect_equal(text_expr), collapse = "\n")), )
 #  })
+#  
+#  test_that("extract_examples_rd works", {
+#    this_function_rd <- system.file("extdata", "extract_examples_rd.Rd",
+#      package = "exampletestr")
+#    expect_equal(extract_examples_rd(this_function_rd), )
+#  })
+#  
+#  test_that("extract_expressions works", {
+#    text_expr <- c("a <- 1", "fx <- function(x) {", "  x + 1",
+#      "}  # this comment should disappear")
+#    expect_equal(extract_expressions(text_expr), )
+#  })
+#  
+#  test_that("text_parse_error works", {
+#    expect_equal(text_parse_error("a <- 1"), )
+#    expect_equal(text_parse_error("a <- "), )
+#  })
 
 ## ----fill in test shell--------------------------------------------------
-test_that("text_eval_error works", {
-  expect_false(text_eval_error("a <- 1"))
-  expect_true(text_eval_error("a <- "))
+test_that("text_parse_error works", {
+  expect_false(text_parse_error("a <- 1"))
+  expect_true(text_parse_error("a <- "))
 })
 
 test_that("extract_expressions works", {
   text_expr <- c("a <- 1",
-  "fx <- function(x) {",
-  "paste('f', x)",
-  "}")
+                 "fx <- function(x) {",
+                 "  x + 1",
+                 "}")
   expect_equal(extract_expressions(text_expr), list(
     "a <- 1",
     c("fx <- function(x) {",
-      "paste('f', x)",
+      "  x + 1",
       "}")
   ))
-})
-
-test_that("TextEval works", {
-  expect_equal(TextEval("3 + 4"), 7)
-  to.be.evaluated <- "var(c(1, 6, 8))"
-  expect_equal(TextEval(to.be.evaluated), var(c(1, 6, 8)))
 })
 
 test_that("construct_expect_equal works", {
@@ -176,10 +193,6 @@ test_that("construct_expect_equal works", {
   expect_equal(construct_expect_equal(text_expr), c("expect_equal(sum(1, ",
                                                     "2), )"))
 })
-
-## ----whole package, eval=FALSE-------------------------------------------
-#  setwd(tempdir())
-#  make_tests_shells_pkg("tempkg")
 
 ## ----setdown, include=FALSE, echo=FALSE----------------------------------
 filesstrings::RemoveDirs("tempkg")

@@ -3,24 +3,28 @@
 \name{make_tests_shells_file}
 \alias{make_tests_shells_file}
 \alias{make_tests_shells_pkg}
-\title{Create the shell of a test file based on roxygen examples.}
+\title{Create the shell of a test file.}
 \usage{
-make_tests_shells_file(r_file_name, pkg_dir = ".", overwrite = FALSE)
+make_tests_shells_file(r_file_name, pkg_dir = ".", overwrite = FALSE,
+  e_e = TRUE)
 
-make_tests_shells_pkg(pkg_dir = ".", overwrite = FALSE)
+make_tests_shells_pkg(pkg_dir = ".", overwrite = FALSE, e_e = TRUE)
 }
 \arguments{
-\item{r_file_name}{The name of the .R file within R/. Don't specify this as
-"R/x.R", just use "x.R" for whichever file x it is. You can also omit the
-.R for convenience, however using the wrong case (e.g. .r) will produce an
-error. If instead, you wish to set the full path to the file here, set
-\code{pkg_dir} to \code{NULL}.}
+\item{r_file_name}{The name of the \code{.R} file within \code{R/}. There's no need to
+specify the file path (as \code{R/x.R}, but you can do this if you want), you
+can just use \code{x.R} for whichever file \code{x} it is. You can also omit the \code{.R}
+for convenience, however using the wrong case (e.g. \code{.r}) will produce an
+error.}
 
 \item{pkg_dir}{The directory of the R project for this package (defaults to
 current directory). Note that this is the parent directory of R/.}
 
 \item{overwrite}{Overwrite if the test file you're trying to create already
 exists?}
+
+\item{e_e}{Set this to \code{FALSE} to prevent anything from being put in the
+shell of an \code{expect_equal()} statement.}
 }
 \value{
 The shell of the test file is written into tests/testthat. It has the
@@ -28,27 +32,24 @@ same name as the .R file it was created from except it has "test_" tacked
 onto the front.
 }
 \description{
-Based on the roxygen-specified examples in a .R file in the R/ directory of
-the package, \code{make_tests_shells_file} create the shell of a test file,
-to be completed by the user. \code{make_tests_shells_pkg} does this for every
-file in R/.
+For a given \code{.R} file in the \code{R/} directory of a package, for each function
+defined in that \code{.R} file, \code{make_tests_shells_file} checks if there are
+examples for that function detailed in the \code{man/} directory (in a \code{.Rd} file)
+and if so creates a shell (skeleton) of a \link[testthat:test_that]{testthat::test_that} test based on
+those examples. The created shells are then written to a file in
+\code{tests/testthat}.
 }
 \examples{
 setwd(tempdir())
-if (dir.exists("tempkg")) warning("Do not proceed, you'll mess with your ",
-"'tempkg' folder.")
-dir.create("tempkg")
 devtools::create("tempkg")
 setwd("tempkg")
 devtools::use_testthat()
-file.copy(system.file("extdata", "exemplar.R", package = "exampletestr"),
-"R", overwrite = TRUE)
-make_tests_shells_file("exemplar")
-file.copy(system.file("extdata", "exampletestr.R", package = "exampletestr"),
-"R", overwrite = TRUE)
-make_tests_shells_pkg(overwrite = TRUE)
-# Now check your tempkg/tests/testthat directory to see what they look like
-# The next two lines clean up
+file.copy(system.file("extdata", c("exemplar.R", "exampletestr.R"),
+                      package = "exampletestr"), "R")
+devtools::document()
+exampletestr::make_tests_shells_file("exemplar")
+devtools::document()
+exampletestr::make_tests_shells_pkg(overwrite = TRUE)
 setwd("..")
 filesstrings::RemoveDirs("tempkg")
 
