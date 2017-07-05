@@ -1,9 +1,9 @@
 Package: exampletestr
 Type: Package
 Title: Help for Writing Unit Tests Based on Function Examples
-Version: 0.4.0
+Version: 1.0.0
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", role = c("aut", "cre")),
-             person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", role = c("ths")))
+             person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", role = "ths"))
 Maintainer: Rory Nolan <rorynoolan@gmail.com>
 Description: Take the examples written in your documentation of functions and 
     use them to create shells (skeletons which must be manually completed by
@@ -11,16 +11,16 @@ Description: Take the examples written in your documentation of functions and
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: filesstrings, magrittr, stringr, BBmisc, devtools, formatR,
-        purrr, utils, roxygen2
+Imports: filesstrings (>= 1.1.0), magrittr, stringr, devtools, formatR,
+        purrr, roxygen2
 RoxygenNote: 6.0.1
-URL: https://www.github.com/rorynolan/autothresholdr
-BugReports: https://www.github.com/rorynolan/autothresholdr/issues
+URL: https://www.github.com/rorynolan/exampletestr
+BugReports: https://www.github.com/rorynolan/exampletestr/issues
 Suggests: testthat, covr, knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2017-04-12 12:37:05 UTC; rnolan
+Packaged: 2017-07-05 13:17:25 UTC; rnolan
 Author: Rory Nolan [aut, cre],
   Sergi Padilla-Parra [ths]
 Repository: CRAN
-Date/Publication: 2017-04-12 13:34:55 UTC
+Date/Publication: 2017-07-05 13:26:04 UTC
