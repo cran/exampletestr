@@ -1,14 +1,15 @@
-e5c3db36923800281d33001882ec3603 *DESCRIPTION
+6842733b0d60391a7bf8633b8bcf946b *DESCRIPTION
 7625d771e72cc7b46522a325551b2fb6 *NAMESPACE
-817675d40544c07f943b096371b2d6f4 *NEWS.md
+3d5f64051a1304e3d4e124bd1281521b *NEWS.md
 f8a4b16bbf83af9a045f5ca18c8cec71 *R/exampletestr.R
 e221f980435bc336c6488c1e5770f7c6 *R/exemplar.R
 a440644e104a211447eff8e0efaa756a *R/utils.R
 0a25ce5062015c0eb134bf87ef65c8f0 *README.md
-337a899ae97c24fdc5d6e6edda96e9ab *build/vignette.rds
+0b2840e9fd61c14ab7647c5da666a1db *build/vignette.rds
+cd82d1d863728cea6e4f90fe461ccf35 *inst/CITATION
 48527063cd27367ac8db9cc60e4135e1 *inst/doc/exampletestr.R
 c40d0c5715bce9f095b1fede06132ed6 *inst/doc/exampletestr.Rmd
-2cf5fb0dee522019cbd1e4b9d38cc7c3 *inst/doc/exampletestr.html
+04105527d8cd527a522c7c4e9b31194d *inst/doc/exampletestr.html
 20fe2c33d81af658a5a8afd8b7a224a4 *inst/extdata/exampletestr.R
 e221f980435bc336c6488c1e5770f7c6 *inst/extdata/exemplar.R
 ec37e84e760f8076deddaf0fbc954343 *inst/extdata/extract_examples_rd.Rd
@@ -24,6 +25,6 @@ ec37e84e760f8076deddaf0fbc954343 *man/extract_examples_rd.Rd
 fae3550dd8fb03fe0b883dc4a84a3113 *man/make_tests_shells_file.Rd
 36544b2b2e9835df29ac4e8b30ad3372 *man/text_parse_error.Rd
 131f4fbc74902e438573e4e26d0bfc7f *tests/testthat.R
-190609869767b0773511b88edba60d23 *tests/testthat/test_exemplar.R
+b611b80a20d72d64714f029f291a4a85 *tests/testthat/test_exemplar.R
 369edcf41377e7eb75e914691bd32c33 *tests/testthat/test_utils.R
 c40d0c5715bce9f095b1fede06132ed6 *vignettes/exampletestr.Rmd
