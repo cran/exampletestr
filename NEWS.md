@@ -1,3 +1,13 @@
+### 1.1.0
+
+#### MINOR IMPROVEMENTS
+* Add `testthat::context()` to test shells.
+* Update for `filesstrings` v2.0.0.
+
+#### BUG FIXES
+* Fix issues with open text connections.
+
+
 ### 1.0.1
 
 #### BUG FIXES

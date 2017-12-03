@@ -68,9 +68,10 @@ devtools::document("tempkg")
 #          comment = !remove_comments, arrow = TRUE, indent = 2, output = FALSE,
 #          width.cutoff = 50)) %>%
 #        purrr::map(getElement, "text.tidy") %>%
-#        purrr::map(~ readLines(textConnection(.)))
+#        purrr::map(paste0, "\n") %>%
+#        purrr::map(readr::read_lines)
 #      for (i in seq_along(expr_groups)) {
-#        if (filesstrings::AllEqual(expr_groups[[i]], character(0))) {
+#        if (filesstrings::all_equal(expr_groups[[i]], character(0))) {
 #          expr_groups[[i]] <- ""
 #        }
 #      }
@@ -81,18 +82,18 @@ devtools::document("tempkg")
 #    # str_trim because sometimes formatR leaves unnecessary trailing whitespace
 #  }
 #  
-#  #' Construct the shell of an `expect_equal` expression.
+#  #' Construct an `expect_equal` expression
 #  #'
-#  #' Construct the shell an `expect_equal` expression from a character vector
+#  #' Construct an `expect_equal` expression from a character vector
 #  #' containing an expression to be evaluated.
 #  #'
-#  #' @param text_expr A character vector of lines that, when executed produce an
-#  #'   output.
+#  #' @param text_expr A character vector of lines that, when executed produce a
+#  #'   single output.
 #  #'
-#  #' @return A character vector. The lines of text containing the `expect_equal`
-#  #'   code (corresponding to the input `text_expr`), which will help to write the
-#  #'   test file based on documentation examples. Remember that this is something
-#  #'   that you're intended to fill the gaps in later.
+#  #' @return A character vector. The lines of text containing the
+#  #'   `expect_equal` code corresponding to the input, which will help to
+#  #'   write the test file based on documentation examples. Remember that
+#  #'   this is something that you're intended to fill the gaps in later.
 #  #'
 #  #' @examples
 #  #' text_expr <- c("sum(1, ", "2)")
@@ -145,6 +146,8 @@ lapply(extract_examples("utils", pkg_dir = "tempkg"), make_test_shell, "whatevs"
 make_tests_shells_file("utils", pkg_dir = "tempkg")
 
 ## ----test_utils.R contents, eval=FALSE-----------------------------------
+#  context("Utils")
+#  
 #  test_that("construct_expect_equal works", {
 #    text_expr <- c("sum(1, ", "2)")
 #    expect_equal(cat(paste(text_expr, collapse = "\n")), )
@@ -170,6 +173,8 @@ make_tests_shells_file("utils", pkg_dir = "tempkg")
 #  })
 
 ## ----fill in test shell--------------------------------------------------
+context("Utils")
+
 test_that("text_parse_error works", {
   expect_false(text_parse_error("a <- 1"))
   expect_true(text_parse_error("a <- "))
@@ -195,5 +200,5 @@ test_that("construct_expect_equal works", {
 })
 
 ## ----setdown, include=FALSE, echo=FALSE----------------------------------
-filesstrings::RemoveDirs("tempkg")
+filesstrings::dir.remove("tempkg")
 

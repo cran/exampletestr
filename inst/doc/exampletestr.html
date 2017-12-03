@@ -12,7 +12,7 @@
 
 <meta name="author" content="Rory Nolan" />
 
-<meta name="date" content="2017-07-31" />
+<meta name="date" content="2017-12-03" />
 
 <title>exampletestr</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">exampletestr</h1>
 <h4 class="author"><em>Rory Nolan</em></h4>
-<h4 class="date"><em>2017-07-31</em></h4>
+<h4 class="date"><em>2017-12-03</em></h4>
 
 
 
@@ -84,14 +84,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(exampletestr)
 <span class="kw">library</span>(testthat)
 devtools<span class="op">::</span><span class="kw">create</span>(<span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
-<pre><code>#&gt; Creating package 'tempkg' in '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpUXPCCR'</code></pre>
+<pre><code>#&gt; Creating package 'tempkg' in '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmpvcjxjk'</code></pre>
 <pre><code>#&gt; No DESCRIPTION found. Creating with values:</code></pre>
 <pre><code>#&gt; Package: tempkg
 #&gt; Title: What the Package Does (one line, title case)
 #&gt; Version: 0.0.0.9000
 #&gt; Authors@R: person(&quot;First&quot;, &quot;Last&quot;, email = &quot;first.last@example.com&quot;, role = c(&quot;aut&quot;, &quot;cre&quot;))
 #&gt; Description: What the package does (one paragraph).
-#&gt; Depends: R (&gt;= 3.4.1)
+#&gt; Depends: R (&gt;= 3.4.2)
 #&gt; License: What license is it under?
 #&gt; Encoding: UTF-8
 #&gt; LazyData: true</code></pre>
@@ -107,7 +107,7 @@ devtools<span class="op">::</span><span class="kw">create</span>(<span class="st
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">document</span>(<span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
 <pre><code>#&gt; Updating tempkg documentation</code></pre>
 <pre><code>#&gt; Loading tempkg</code></pre>
-<pre><code>#&gt; Updating roxygen version in /private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpUXPCCR/tempkg/DESCRIPTION</code></pre>
+<pre><code>#&gt; Updating roxygen version in /private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmpvcjxjk/tempkg/DESCRIPTION</code></pre>
 <pre><code>#&gt; Writing NAMESPACE
 #&gt; Writing text_parse_error.Rd
 #&gt; Writing extract_expressions.Rd
@@ -170,9 +170,10 @@ extract_expressions &lt;-<span class="st"> </span><span class="cf">function</spa
         <span class="dt">comment =</span> <span class="op">!</span>remove_comments, <span class="dt">arrow =</span> <span class="ot">TRUE</span>, <span class="dt">indent =</span> <span class="dv">2</span>, <span class="dt">output =</span> <span class="ot">FALSE</span>,
         <span class="dt">width.cutoff =</span> <span class="dv">50</span>)) <span class="op">%&gt;%</span>
 <span class="st">      </span>purrr<span class="op">::</span><span class="kw">map</span>(getElement, <span class="st">&quot;text.tidy&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">      </span>purrr<span class="op">::</span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">readLines</span>(<span class="kw">textConnection</span>(.)))
+<span class="st">      </span>purrr<span class="op">::</span><span class="kw">map</span>(paste0, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span>purrr<span class="op">::</span><span class="kw">map</span>(readr<span class="op">::</span>read_lines)
     <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(expr_groups)) {
-      <span class="cf">if</span> (filesstrings<span class="op">::</span><span class="kw">AllEqual</span>(expr_groups[[i]], <span class="kw">character</span>(<span class="dv">0</span>))) {
+      <span class="cf">if</span> (filesstrings<span class="op">::</span><span class="kw">all_equal</span>(expr_groups[[i]], <span class="kw">character</span>(<span class="dv">0</span>))) {
         expr_groups[[i]] &lt;-<span class="st"> &quot;&quot;</span>
       }
     }
@@ -183,18 +184,18 @@ extract_expressions &lt;-<span class="st"> </span><span class="cf">function</spa
   <span class="co"># str_trim because sometimes formatR leaves unnecessary trailing whitespace</span>
 }
 
-<span class="co">#' Construct the shell of an `expect_equal` expression.</span>
+<span class="co">#' Construct an `expect_equal` expression</span>
 <span class="co">#'</span>
-<span class="co">#' Construct the shell an `expect_equal` expression from a character vector</span>
+<span class="co">#' Construct an `expect_equal` expression from a character vector</span>
 <span class="co">#' containing an expression to be evaluated.</span>
 <span class="co">#'</span>
-<span class="co">#' @param text_expr A character vector of lines that, when executed produce an</span>
-<span class="co">#'   output.</span>
+<span class="co">#' @param text_expr A character vector of lines that, when executed produce a</span>
+<span class="co">#'   single output.</span>
 <span class="co">#'</span>
-<span class="co">#' @return A character vector. The lines of text containing the `expect_equal`</span>
-<span class="co">#'   code (corresponding to the input `text_expr`), which will help to write the</span>
-<span class="co">#'   test file based on documentation examples. Remember that this is something</span>
-<span class="co">#'   that you're intended to fill the gaps in later.</span>
+<span class="co">#' @return A character vector. The lines of text containing the</span>
+<span class="co">#'   `expect_equal` code corresponding to the input, which will help to</span>
+<span class="co">#'   write the test file based on documentation examples. Remember that</span>
+<span class="co">#'   this is something that you're intended to fill the gaps in later.</span>
 <span class="co">#'</span>
 <span class="co">#' @examples</span>
 <span class="co">#' text_expr &lt;- c(&quot;sum(1, &quot;, &quot;2)&quot;)</span>
@@ -233,7 +234,7 @@ extract_examples_rd &lt;-<span class="st"> </span><span class="cf">function</spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">extract_examples</span>(<span class="st">&quot;utils&quot;</span>, <span class="dt">pkg_dir =</span> <span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
 <pre><code>#&gt; $construct_expect_equal
 #&gt;  [1] &quot;### Name: construct_expect_equal&quot;                                 
-#&gt;  [2] &quot;### Title: Construct the shell of an 'expect_equal' expression.&quot;  
+#&gt;  [2] &quot;### Title: Construct an 'expect_equal' expression&quot;                
 #&gt;  [3] &quot;### Aliases: construct_expect_equal&quot;                              
 #&gt;  [4] &quot;&quot;                                                                 
 #&gt;  [5] &quot;### ** Examples&quot;                                                  
@@ -326,7 +327,9 @@ extract_examples_rd &lt;-<span class="st"> </span><span class="cf">function</spa
 <p>We can make the unit tests <em>shell</em> file (<em>shell</em> because it needs to be filled in) via <code>make_tests_shell_file</code>. Running</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">make_tests_shells_file</span>(<span class="st">&quot;utils&quot;</span>, <span class="dt">pkg_dir =</span> <span class="st">&quot;tempkg&quot;</span>)</code></pre></div>
 <p>outputs a <code>test_utils.R</code> file in the <code>tests/testthat</code> folder with contents</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">test_that</span>(<span class="st">&quot;construct_expect_equal works&quot;</span>, {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">context</span>(<span class="st">&quot;Utils&quot;</span>)
+
+<span class="kw">test_that</span>(<span class="st">&quot;construct_expect_equal works&quot;</span>, {
   text_expr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;sum(1, &quot;</span>, <span class="st">&quot;2)&quot;</span>)
   <span class="kw">expect_equal</span>(<span class="kw">cat</span>(<span class="kw">paste</span>(text_expr, <span class="dt">collapse =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)), )
   <span class="kw">expect_equal</span>(<span class="kw">construct_expect_equal</span>(text_expr), )
@@ -350,7 +353,9 @@ extract_examples_rd &lt;-<span class="st"> </span><span class="cf">function</spa
   <span class="kw">expect_equal</span>(<span class="kw">text_parse_error</span>(<span class="st">&quot;a &lt;- &quot;</span>), )
 })</code></pre></div>
 <p>which, for my purposes, I complete as</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">test_that</span>(<span class="st">&quot;text_parse_error works&quot;</span>, {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">context</span>(<span class="st">&quot;Utils&quot;</span>)
+
+<span class="kw">test_that</span>(<span class="st">&quot;text_parse_error works&quot;</span>, {
   <span class="kw">expect_false</span>(<span class="kw">text_parse_error</span>(<span class="st">&quot;a &lt;- 1&quot;</span>))
   <span class="kw">expect_true</span>(<span class="kw">text_parse_error</span>(<span class="st">&quot;a &lt;- &quot;</span>))
 })

@@ -3,7 +3,7 @@ exampletestr
 
 An R package to help developers create unit tests (designed for use with the testthat package) for their package, based on the examples in their package documentation.
 
-[![Travis-CI Build Status](https://travis-ci.org/rorynolan/exampletestr.svg?branch=master)](https://travis-ci.org/rorynolan/exampletestr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/exampletestr?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/exampletestr) [![codecov](https://codecov.io/gh/rorynolan/exampletestr/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/exampletestr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/exampletestr)](https://cran.r-project.org/package=exampletestr) ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/exampletestr) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Travis-CI Build Status](https://travis-ci.org/rorynolan/exampletestr.svg?branch=master)](https://travis-ci.org/rorynolan/exampletestr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/exampletestr?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/exampletestr) [![codecov](https://codecov.io/gh/rorynolan/exampletestr/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/exampletestr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/exampletestr)](https://cran.r-project.org/package=exampletestr) ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/exampletestr) [![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/exampletestr)](https://cran.r-project.org/package=exampletestr) [![Rdocumentation](http://www.rdocumentation.org/badges/version/exampletestr)](http://www.rdocumentation.org/packages/exampletestr) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 
 Installation
 ------------
@@ -36,7 +36,7 @@ devtools::create("tempkg")
     #> Version: 0.0.0.9000
     #> Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
     #> Description: What the package does (one paragraph).
-    #> Depends: R (>= 3.3.3)
+    #> Depends: R (>= 3.4.2)
     #> License: What license is it under?
     #> Encoding: UTF-8
     #> LazyData: true
@@ -137,9 +137,10 @@ extract_expressions <- function(text_expr, remove_comments = TRUE) {
         comment = !remove_comments, arrow = TRUE, indent = 2, output = FALSE,
         width.cutoff = 50)) %>%
       purrr::map(getElement, "text.tidy") %>%
-      purrr::map(~ readLines(textConnection(.)))
+      purrr::map(paste0, "\n") %>%
+      purrr::map(readr::read_lines)
     for (i in seq_along(expr_groups)) {
-      if (filesstrings::AllEqual(expr_groups[[i]], character(0))) {
+      if (filesstrings::all_equal(expr_groups[[i]], character(0))) {
         expr_groups[[i]] <- ""
       }
     }
@@ -150,18 +151,18 @@ extract_expressions <- function(text_expr, remove_comments = TRUE) {
   # str_trim because sometimes formatR leaves unnecessary trailing whitespace
 }
 
-#' Construct the shell of an `expect_equal` expression.
+#' Construct an `expect_equal` expression
 #'
-#' Construct the shell an `expect_equal` expression from a character vector
+#' Construct an `expect_equal` expression from a character vector
 #' containing an expression to be evaluated.
 #'
-#' @param text_expr A character vector of lines that, when executed produce an
-#'   output.
+#' @param text_expr A character vector of lines that, when executed produce a
+#'   single output.
 #'
-#' @return A character vector. The lines of text containing the `expect_equal`
-#'   code (corresponding to the input `text_expr`), which will help to write the
-#'   test file based on documentation examples. Remember that this is something
-#'   that you're intended to fill the gaps in later.
+#' @return A character vector. The lines of text containing the
+#'   `expect_equal` code corresponding to the input, which will help to
+#'   write the test file based on documentation examples. Remember that
+#'   this is something that you're intended to fill the gaps in later.
 #'
 #' @examples
 #' text_expr <- c("sum(1, ", "2)")
@@ -206,7 +207,7 @@ extract_examples("utils", pkg_dir = "tempkg")
 
     #> $construct_expect_equal
     #>  [1] "### Name: construct_expect_equal"                                 
-    #>  [2] "### Title: Construct the shell of an 'expect_equal' expression."  
+    #>  [2] "### Title: Construct an 'expect_equal' expression"                
     #>  [3] "### Aliases: construct_expect_equal"                              
     #>  [4] ""                                                                 
     #>  [5] "### ** Examples"                                                  
@@ -316,6 +317,8 @@ make_tests_shells_file("utils", pkg_dir = "tempkg")
 outputs a `test_utils.R` file in the `tests/testthat` folder with contents
 
 ``` r
+context("Utils")
+
 test_that("construct_expect_equal works", {
   text_expr <- c("sum(1, ", "2)")
   expect_equal(cat(paste(text_expr, collapse = "\n")), )
@@ -344,6 +347,8 @@ test_that("text_parse_error works", {
 which, for my purposes, I complete as
 
 ``` r
+context("Utils")
+
 test_that("text_parse_error works", {
   expect_false(text_parse_error("a <- 1"))
   expect_true(text_parse_error("a <- "))
@@ -374,3 +379,8 @@ To create these test shell files for each file in the `R/` directory of your pac
 ### The Goal is NOT Fully Automated Unit Test Creation
 
 I would like to stress that whilst unit testing should be automatic, the creation of these tests is a manual process, a manual check. This package is supposed to help you *start* making those tests. It is not supposed to create fully functioning tests automatically, nor can it help you to write every type of test you might want.
+
+Contribution
+============
+
+Contributions to this package are welcome. The preferred method of contribution is through a github pull request. Feel free to contact me by creating an issue. Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
