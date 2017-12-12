@@ -1,7 +1,7 @@
 Package: exampletestr
 Type: Package
 Title: Help for Writing Unit Tests Based on Function Examples
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", role = c("aut", "cre")),
              person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", role = "ths"))
 Maintainer: Rory Nolan <rorynoolan@gmail.com>
@@ -19,8 +19,8 @@ BugReports: https://www.github.com/rorynolan/exampletestr/issues
 Suggests: testthat, covr, knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2017-12-03 13:52:51 UTC; rnolan
+Packaged: 2017-12-12 13:50:13 UTC; rnolan
 Author: Rory Nolan [aut, cre],
   Sergi Padilla-Parra [ths]
 Repository: CRAN
-Date/Publication: 2017-12-03 14:12:54 UTC
+Date/Publication: 2017-12-12 13:56:39 UTC
