@@ -103,7 +103,7 @@ lapply(extract_examples("match", pkg_dir = "tempkg"), make_test_shell, "whatevs"
 
 We can make the unit tests _shell_ file (_shell_ because it needs to be filled in) via `make_tests_shell_file`. Running 
 ```{r make_tests_shells_file}
-make_tests_shells_file("match", pkg_dir = "tempkg")
+make_tests_shells_file("match", pkg_dir = "tempkg", open = FALSE)
 ```
 ```{r load stringr, include=FALSE}
 library(stringr)
@@ -204,7 +204,7 @@ test_that("str_match() works", {
 })
 ```
 
-To create these test shell files for each file in the `R/` directory of your package, run `make_tests_shells_pkg()`.
+To create these test shell files for each file in the `R/` directory of your package, run `make_tests_shells_pkg()`. To create a test shell for the examples of a single function, use `make_test_shell_fun()`.
 
 
 ```{r setdown, include=FALSE}

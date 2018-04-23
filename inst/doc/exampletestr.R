@@ -79,7 +79,7 @@ extract_examples("match", pkg_dir = "tempkg")
 lapply(extract_examples("match", pkg_dir = "tempkg"), make_test_shell, "whatevs")
 
 ## ----make_tests_shells_file----------------------------------------------
-make_tests_shells_file("match", pkg_dir = "tempkg")
+make_tests_shells_file("match", pkg_dir = "tempkg", open = FALSE)
 
 ## ----load stringr, include=FALSE-----------------------------------------
 library(stringr)

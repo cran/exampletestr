@@ -4,7 +4,7 @@
 \alias{extract_examples}
 \title{Extract examples lines from the functions in a .R file of a package.}
 \usage{
-extract_examples(r_file_name, pkg_dir = ".")
+extract_examples(r_file_name, pkg_dir = ".", document = TRUE)
 }
 \arguments{
 \item{r_file_name}{The name of the \code{.R} file within \code{R/}. There's no need to
@@ -14,7 +14,15 @@ for convenience, however using the wrong case (e.g. \code{.r}) will produce an
 error.}
 
 \item{pkg_dir}{The directory of the R project for this package (defaults to
-current directory). This is the parent directory of \code{R/} and \code{man/}.}
+current directory). This is the parent directory of \code{R/} and \code{man/}. In
+reality, this specification is somewhat lenient and even if you are in any
+sub-directory of the root, it will work (e.g. it will work if you are in
+\code{R/} or \code{man/}). Beware that this behaviour can cause a problem if you have
+an R package inside an R package (but really, you have yourself to blame if
+that's the case).}
+
+\item{document}{Run \code{\link[devtools:document]{devtools::document()}} to update package documentation
+before starting?}
 }
 \value{
 A list of character vectors.
