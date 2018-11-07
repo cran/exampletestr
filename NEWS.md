@@ -1,3 +1,10 @@
+## `exampletestr` 1.4.1
+
+#### BUG FIXES
+* Some calls to `tempdir()` needed to be `tempdir(check = TRUE)`.
+    - This necessitates a dependency on R >= 3.5.0 (this is when the `check` option appeared in `tempdir()`).
+
+
 ## `exampletestr` 1.4.0
 
 #### NEW FEATURES

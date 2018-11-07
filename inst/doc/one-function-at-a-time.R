@@ -1,16 +1,26 @@
 ## ----knitr-setup, include=FALSE------------------------------------------
 init_wd <- getwd()
 knitr::opts_chunk$set(echo = TRUE, comment = "#>")
-knitr::opts_knit$set(root.dir = tempdir())
-library(testthat)
+knitr::opts_knit$set(root.dir = tempdir(check = TRUE))
+pacman::p_load(testthat, exampletestr, stringr)
 
 ## ----setup, results='hide'-----------------------------------------------
-library(exampletestr)
 usethis::create_package("tempkg", open = FALSE)
-setwd("tempkg")
-file.copy(system.file("extdata", c("detect.R", "match.R"), 
-                      package = "exampletestr"), 
-          rprojroot::find_package_root_file("R/"))
+file.copy(
+  system.file("extdata", c("detect.R", "match.R"), package = "exampletestr"), 
+  rprojroot::find_root_file(
+    "tempkg/R/", 
+    criterion = rprojroot::has_dir("tempkg")
+  )
+)
+
+## ----fake-dir-change, eval=FALSE-----------------------------------------
+#  setwd(
+#    rprojroot::find_root_file(
+#      "tempkg/",
+#      criterion = rprojroot::has_dir("tempkg")
+#    )
+#  )
 
 ## ----further-knitr-setup, include=FALSE----------------------------------
 knitr::opts_knit$set(root.dir = paste0(tempdir(), "/", "tempkg"))
@@ -61,9 +71,6 @@ knitr::opts_knit$set(root.dir = paste0(tempdir(), "/", "tempkg"))
 #    expect_equal(str_detect("aecfg", letters), )
 #  })
 
-## ----enter-stringr, include=FALSE----------------------------------------
-library(stringr)
-
 ## ----fill in test shell--------------------------------------------------
 context("`str_detect()`")
 
@@ -79,7 +86,7 @@ test_that("`str_detect()` works", {
 })
 
 ## ----setdown, include=FALSE----------------------------------------------
-setwd("..")
-filesstrings::dir.remove("tempkg")
+knitr::opts_knit$set(root.dir = tempdir(check = TRUE))
+if (dir.exists("tempkg")) filesstrings::dir.remove("tempkg")
 knitr::opts_knit$set(root.dir = init_wd)
 
