@@ -63,6 +63,7 @@ corresponding file \code{test-x-examples.R} in \code{tests/testthat}. \item
 directory of a package.}
 }
 \examples{
+\dontrun{
 usethis::create_package(tempdir(check = TRUE), open = FALSE)
 file.copy(system.file("extdata", c("detect.R", "match.R"),
                       package = "exampletestr"),
@@ -73,5 +74,6 @@ make_tests_shells_file("detect", document = FALSE, open = FALSE,
                        pkg_dir = tempdir())
 make_tests_shells_pkg(overwrite = TRUE, document = FALSE,
                       pkg_dir = tempdir())
+}
 
 }

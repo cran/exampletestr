@@ -1,3 +1,9 @@
+##`exampletestr` 1.4.2
+
+#### BUG FIXES
+* Quick and dirty fix for CRAN mac. Better will be possible when the next version of usethis is released.
+
+
 ## `exampletestr` 1.4.1
 
 #### BUG FIXES

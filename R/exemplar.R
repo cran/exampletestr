@@ -243,6 +243,7 @@ make_test_shell <- function(example_block, desc = "", e_e = TRUE) {
 #'   onto the front.
 #'
 #' @examples
+#' \dontrun{
 #' usethis::create_package(tempdir(check = TRUE), open = FALSE)
 #' file.copy(system.file("extdata", c("detect.R", "match.R"),
 #'                       package = "exampletestr"),
@@ -253,6 +254,7 @@ make_test_shell <- function(example_block, desc = "", e_e = TRUE) {
 #'                        pkg_dir = tempdir())
 #' make_tests_shells_pkg(overwrite = TRUE, document = FALSE,
 #'                       pkg_dir = tempdir())
+#' }
 #'
 #' @name make-test-shells
 NULL
