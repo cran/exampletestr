@@ -6,24 +6,19 @@ pacman::p_load(testthat, exampletestr, stringr)
 
 ## ----setup, results='hide'-----------------------------------------------
 usethis::create_package("tempkg", open = FALSE)
-file.copy(
+fs::file_copy(
   system.file("extdata", c("detect.R", "match.R"), package = "exampletestr"), 
-  rprojroot::find_root_file(
-    "tempkg/R/", 
-    criterion = rprojroot::has_dir("tempkg")
-  )
+  "tempkg/R/"
 )
 
 ## ----fake-dir-change, eval=FALSE-----------------------------------------
-#  setwd(
-#    rprojroot::find_root_file(
-#      "tempkg/",
-#      criterion = rprojroot::has_dir("tempkg")
-#    )
-#  )
+#  setwd("tempkg/")
 
 ## ----further-knitr-setup, include=FALSE----------------------------------
 knitr::opts_knit$set(root.dir = paste0(tempdir(), "/", "tempkg"))
+
+## ----proj-set------------------------------------------------------------
+usethis::proj_set(".")
 
 ## ----Look at match.R file, eval=FALSE------------------------------------
 #  #' Detect the presence or absence of a pattern in a string.
@@ -60,8 +55,6 @@ knitr::opts_knit$set(root.dir = paste0(tempdir(), "/", "tempkg"))
 #  make_tests_shells_file("detect", open = FALSE)
 
 ## ----test-utils.R contents, eval=FALSE-----------------------------------
-#  context("Detect")
-#  
 #  test_that("`str_detect()` works", {
 #    fruit <- c("apple", "banana", "pear", "pinapple")
 #    expect_equal(str_detect(fruit, "a"), )
@@ -73,8 +66,6 @@ knitr::opts_knit$set(root.dir = paste0(tempdir(), "/", "tempkg"))
 #  })
 
 ## ----fill in test shell--------------------------------------------------
-context("Detect")
-
 test_that("`str_detect()` works", {
   fruit <- c("apple", "banana", "pear", "pinapple")
   expect_equal(str_detect(fruit, "a"), rep(TRUE, 4))
@@ -86,8 +77,10 @@ test_that("`str_detect()` works", {
                letters %in% c("a", "c", "e", "f", "g"))
 })
 
-## ----setdown, include=FALSE----------------------------------------------
+## ----setdown0------------------------------------------------------------
 knitr::opts_knit$set(root.dir = tempdir(check = TRUE))
-if (dir.exists("tempkg")) filesstrings::dir.remove("tempkg")
+
+## ----setdown-------------------------------------------------------------
+if (fs::dir_exists("tempkg")) fs::dir_delete("tempkg")
 knitr::opts_knit$set(root.dir = init_wd)
 

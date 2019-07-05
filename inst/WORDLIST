@@ -1,6 +1,7 @@
 AppVeyor
 codecov
 dev
+doctests
 DOI
 github
 https
@@ -12,6 +13,5 @@ rorynolan
 RStudio
 testthat
 usethis
-verisons
 Walthert
 Wellcome
