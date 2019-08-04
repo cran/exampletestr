@@ -54,8 +54,6 @@ usethis::proj_set(".")
 #  make_test_shell_fun("str_detect", open = FALSE)
 
 ## ----test-utils.R contents, eval=FALSE-----------------------------------
-#  context("`str_detect()`")
-#  
 #  test_that("`str_detect()` works", {
 #    fruit <- c("apple", "banana", "pear", "pinapple")
 #    expect_equal(str_detect(fruit, "a"), )
@@ -67,8 +65,6 @@ usethis::proj_set(".")
 #  })
 
 ## ----fill in test shell--------------------------------------------------
-context("`str_detect()`")
-
 test_that("`str_detect()` works", {
   fruit <- c("apple", "banana", "pear", "pinapple")
   expect_equal(str_detect(fruit, "a"), rep(TRUE, 4))
