@@ -1,6 +1,6 @@
-bf0684176a1c23bde94a8694855cd717 *DESCRIPTION
+4badd3cbbabc1a3430a110f1b10d497d *DESCRIPTION
 6cca2ba56523c43fd78fbaf0e5a53d02 *NAMESPACE
-09c04f3a43ab5c223e59cfa05ec1cb0c *NEWS.md
+8b111fbb63db443fd7ad2a2a53197ece *NEWS.md
 9ade77ed9f55cdf71555f083cbf48037 *R/example-extraction.R
 fc1fde3ad3612c017786d30dc1a5f7d6 *R/exampletestr.R
 9e6b6b73ee62ec78c8babf0176343735 *R/exemplar.R
@@ -12,13 +12,13 @@ fc1fde3ad3612c017786d30dc1a5f7d6 *R/exampletestr.R
 defcb968217a9ff1410de7aa0eef8181 *inst/WORDLIST
 574de47782a34fb264448822942ea6c6 *inst/doc/one-file-at-a-time.R
 44b82876a8417c4311b6c87bbe5e5a0a *inst/doc/one-file-at-a-time.Rmd
-71918618f9eb99c211dac4f43db1f3a8 *inst/doc/one-file-at-a-time.html
+07f04a94f612d6bf5aea9e3b36ebe1e3 *inst/doc/one-file-at-a-time.html
 ab15d8f60a64e92b5c02afe9e31943c1 *inst/doc/one-function-at-a-time.R
 31cea5285c8c2df5f30889a9c9f39942 *inst/doc/one-function-at-a-time.Rmd
-9993fca0c5ebeb6fb69bd9448b608b1d *inst/doc/one-function-at-a-time.html
+1d754da7589d6b088257343e4e7f50b8 *inst/doc/one-function-at-a-time.html
 6e2cbdbd4e307cf726b10c65dadccb80 *inst/doc/whole-package.R
 04a4ea70dbb710663bf7faebc8aaf4b7 *inst/doc/whole-package.Rmd
-a5184ae70f8c341334f7be2356d64a1b *inst/doc/whole-package.html
+fc00755b4398c393ec1e7541bcd51cb8 *inst/doc/whole-package.html
 f727f9ff6e5b726c5c032e52d37e7f05 *inst/extdata/detect.R
 5cb4cc5b0e13101d4af6fc92050d006e *inst/extdata/goodbye.R
 d8025214991b7009bc40f2baa0fde0d0 *inst/extdata/hello.R
