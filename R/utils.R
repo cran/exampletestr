@@ -74,7 +74,8 @@ construct_expect_equal <- function(text_expr) {
 
 #' Extract examples from a `.Rd` file as a character vector.
 #'
-#' This is a convenient wrapper to [tools::Rd2ex] which actually returns a character vector of the examples in the `.Rd` file.
+#' This is a convenient wrapper to [tools::Rd2ex] which actually returns a
+#' character vector of the examples in the `.Rd` file.
 #'
 #' @param rd_file_path The path to the `.Rd` file.
 #'
@@ -99,7 +100,8 @@ extract_examples_rd <- function(rd_file_path) {
 #'
 #' Scan the `.Rd` files in a package and look for the specified function.
 #'
-#' @param fun A string. The name of the function without parentheses or arguments.
+#' @param fun A string. The name of the function without parentheses or
+#'   arguments.
 #'
 #' @return A boolean.
 #' @noRd
@@ -136,11 +138,15 @@ is_documented <- function(fun) {
 
 exampletestr_document <- function(usethis_quiet) {
   withr::with_options(list(usethis.quiet = usethis_quiet), {
-    usethis::ui_info(paste("Running",
-                           "{usethis::ui_code('roxygen2::roxygenize')}",
-                           ". . ."))
-    proj_location <- withr::with_options(list(usethis.quiet = TRUE),
-                                         usethis::proj_get())
+    usethis::ui_info(paste(
+      "Running",
+      "{usethis::ui_code('roxygen2::roxygenize')}",
+      ". . ."
+    ))
+    proj_location <- withr::with_options(
+      list(usethis.quiet = TRUE),
+      usethis::proj_get()
+    )
     invisible(utils::capture.output(roxygen2::roxygenize(proj_location)))
     usethis::ui_done("Roxygenized :-)")
   })
@@ -149,7 +155,8 @@ exampletestr_document <- function(usethis_quiet) {
 make_available_test_file_name <- function(test_file_name) {
   checkmate::assert_string(test_file_name)
   withr::with_options(
-    list(usethis.quiet = TRUE), {
+    list(usethis.quiet = TRUE),
+    {
       testthat_dir <- usethis::proj_path("tests", "testthat")
       checkmate::assert_directory_exists(testthat_dir)
     }
@@ -185,9 +192,10 @@ make_available_test_file_name <- function(test_file_name) {
 custom_stop_bullet <- function(string) {
   checkmate::assert_string(string)
   string %>%
-    stringr::str_replace_all("\\s+", " ") %>% {
-    glue::glue("    * {.}")
-  }
+    stringr::str_replace_all("\\s+", " ") %>%
+    {
+      stringr::str_glue("    * {.}")
+    }
 }
 
 #' Nicely formatted error message.
@@ -205,7 +213,7 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
   checkmate::assert_string(main_message)
   main_message %<>%
     stringr::str_replace_all("\\s+", " ") %>%
-    glue::glue(.envir = .envir)
+    stringr::str_glue(.envir = .envir)
   out <- main_message
   dots <- unlist(list(...))
   if (length(dots)) {
@@ -213,13 +221,13 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
       stop("\nThe arguments in ... must all be of character type.")
     }
     dots %<>%
-      purrr::map_chr(glue::glue, .envir = .envir) %>%
+      purrr::map_chr(stringr::str_glue, .envir = .envir) %>%
       purrr::map_chr(custom_stop_bullet)
     out %<>% {
-      glue::glue_collapse(c(., dots), sep = "\n")
+      stringr::str_c(c(., dots), collapse = "\n")
     }
   }
-  rlang::abort(glue::glue_collapse(out, sep = "\n"))
+  rlang::abort(stringr::str_c(out, collapse = "\n"))
 }
 
 check_for_DESCRIPTION <- function() {

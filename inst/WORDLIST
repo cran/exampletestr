@@ -1,3 +1,4 @@
+addin
 AppVeyor
 codecov
 dev
@@ -5,11 +6,13 @@ doctests
 DOI
 github
 https
-ijtiff
 io
 lifecycle
 Rdocumentation
 rorynolan
+roxygen
+roxytest
+Roxytest
 RStudio
 testthat
 usethis
