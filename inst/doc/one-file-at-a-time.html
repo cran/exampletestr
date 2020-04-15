@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2020-04-08" />
+<meta name="date" content="2020-04-15" />
 
 <title>One .R file at a time</title>
 
@@ -299,7 +299,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">One .R file at a time</h1>
-<h4 class="date">2020-04-08</h4>
+<h4 class="date">2020-04-15</h4>
 
 
 
@@ -309,7 +309,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>First, let’s set up a dummy package called <code>tempkg</code> with just the <code>detect.R</code> and <code>match.R</code> files from the source code of the <code>stringr</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">usethis<span class="op">::</span><span class="kw">create_package</span>(<span class="st">&quot;tempkg&quot;</span>, <span class="dt">open =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>#&gt; ✓ Creating 'tempkg/'</code></pre>
-<pre><code>#&gt; ✓ Setting active project to '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpFOmcT5/tempkg'</code></pre>
+<pre><code>#&gt; ✓ Setting active project to '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpNkNyv1/tempkg'</code></pre>
 <pre><code>#&gt; ✓ Creating 'R/'</code></pre>
 <pre><code>#&gt; ✓ Writing 'DESCRIPTION'</code></pre>
 <pre><code>#&gt; ✓ Writing 'NAMESPACE'</code></pre>
@@ -322,7 +322,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">setwd</span>(<span class="st">&quot;tempkg/&quot;</span>)</a></code></pre></div>
 <p>and set the active project:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">usethis<span class="op">::</span><span class="kw">proj_set</span>(<span class="st">&quot;.&quot;</span>)</a></code></pre></div>
-<pre><code>#&gt; ✓ Setting active project to '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpFOmcT5/tempkg'</code></pre>
+<pre><code>#&gt; ✓ Setting active project to '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpNkNyv1/tempkg'</code></pre>
 </div>
 <div id="main-event" class="section level1">
 <h1>Main event</h1>
