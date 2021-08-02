@@ -21,14 +21,14 @@ test_that("`make_tests_shell_fun()` works", {
   expect_false(is_documented("str_detect"))
   fs::dir_create(paste0(pkg_dir, "/man"))
   expect_false(is_documented("str_detect"))
-  if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+  if (Sys.getenv("NOT_CRAN") == "true" && nchar(Sys.getenv("DISPLAY"))) {
     make_test_shell_fun("str_detect",
       open = FALSE, pkg_dir = pkg_dir,
       roxytest = TRUE
     )
     skip_if_not_installed("clipr")
     expect_equal(
-      clipr::read_clip(TRUE),
+      stringr::str_trim(clipr::read_clip(TRUE)),
       c(
         "@testexamples",
         "#' expect_equal(str_detect(fruit, \"a\"), )",
@@ -43,7 +43,8 @@ test_that("`make_tests_shell_fun()` works", {
   make_test_shell_fun("str_detect()", open = FALSE, pkg_dir = pkg_dir)
   expect_equal(
     readr::read_lines(
-      usethis::proj_path("/tests/testthat/test-str_detect-examples.R")
+      usethis::proj_path("/tests/testthat/test-str_detect-examples.R"),
+      lazy = FALSE
     ),
     c(
       "test_that(\"`str_detect()` works\", {",
@@ -60,7 +61,8 @@ test_that("`make_tests_shell_fun()` works", {
   make_test_shell_fun("str_match_all", open = FALSE, pkg_dir = pkg_dir)
   expect_equal(
     readr::read_lines(
-      usethis::proj_path("tests/testthat/test-str_match_all-examples.R")
+      usethis::proj_path("tests/testthat/test-str_match_all-examples.R"),
+      lazy = FALSE
     ),
     c(
       "test_that(\"`str_match_all()` works\", {",

@@ -11,10 +11,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-08-02" />
 
 <title>One .R file at a time</title>
 
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -35,26 +36,28 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -63,9 +66,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -123,187 +126,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; } 
-code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
 
@@ -316,7 +139,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">One .R file at a time</h1>
-<h4 class="date">2021-04-24</h4>
+<h4 class="date">2021-08-02</h4>
 
 
 
@@ -324,87 +147,87 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <p>First, let’s set up a dummy package called <code>tempkg</code> with just the <code>detect.R</code> and <code>match.R</code> files from the source code of the <code>stringr</code> package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">usethis<span class="op">::</span><span class="kw">create_package</span>(<span class="st">&quot;tempkg&quot;</span>, <span class="dt">open =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<pre><code>#&gt; ✓ Creating 'tempkg/'</code></pre>
-<pre><code>#&gt; ✓ Setting active project to '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpfmxwBb/tempkg'</code></pre>
-<pre><code>#&gt; ✓ Creating 'R/'</code></pre>
-<pre><code>#&gt; ✓ Writing 'DESCRIPTION'</code></pre>
-<pre><code>#&gt; ✓ Writing 'NAMESPACE'</code></pre>
-<pre><code>#&gt; ✓ Setting active project to '&lt;no active project&gt;'</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">fs<span class="op">::</span><span class="kw">file_copy</span>(</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;detect.R&quot;</span>, <span class="st">&quot;match.R&quot;</span>), <span class="dt">package =</span> <span class="st">&quot;exampletestr&quot;</span>),</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="st">&quot;tempkg/R/&quot;</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_package</span>(<span class="st">&quot;tempkg&quot;</span>, <span class="at">open =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>#&gt; ✓ Creating &#39;tempkg/&#39;</code></pre>
+<pre><code>#&gt; ✓ Setting active project to &#39;/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmp0vRTxP/tempkg&#39;</code></pre>
+<pre><code>#&gt; ✓ Creating &#39;R/&#39;</code></pre>
+<pre><code>#&gt; ✓ Writing &#39;DESCRIPTION&#39;</code></pre>
+<pre><code>#&gt; ✓ Writing &#39;NAMESPACE&#39;</code></pre>
+<pre><code>#&gt; ✓ Setting active project to &#39;&lt;no active project&gt;&#39;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">file_copy</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;detect.R&quot;</span>, <span class="st">&quot;match.R&quot;</span>), <span class="at">package =</span> <span class="st">&quot;exampletestr&quot;</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;tempkg/R/&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Now let’s move into the <code>tempkg</code> directory:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">setwd</span>(<span class="st">&quot;tempkg/&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;tempkg/&quot;</span>)</span></code></pre></div>
 <p>and set the active project:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">usethis<span class="op">::</span><span class="kw">proj_set</span>(<span class="st">&quot;.&quot;</span>)</a></code></pre></div>
-<pre><code>#&gt; ✓ Setting active project to '/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpfmxwBb/tempkg'</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">proj_set</span>(<span class="st">&quot;.&quot;</span>)</span></code></pre></div>
+<pre><code>#&gt; ✓ Setting active project to &#39;/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmp0vRTxP/tempkg&#39;</code></pre>
 </div>
 <div id="main-event" class="section level1">
 <h1>Main event</h1>
 <p>The <code>detect.R</code> file looks like this (well, I’ve abbreviated it slightly):</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">#' Detect the presence or absence of a pattern in a string.</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co">#'</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">#' Vectorised over `string` and `pattern`.</span></a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#'</span></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">#' @param string Input vector. Either a character vector, or something</span></a>
-<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">#'  coercible to one.</span></a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="co">#' @param pattern Pattern to look for.</span></a>
-<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">#'</span></a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="co">#' @return A logical vector.</span></a>
-<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co">#'</span></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="co">#' @export</span></a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="co">#' @examples</span></a>
-<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="co">#' fruit &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;, &quot;pinapple&quot;)</span></a>
-<a class="sourceLine" id="cb12-14" data-line-number="14"><span class="co">#' str_detect(fruit, &quot;a&quot;)</span></a>
-<a class="sourceLine" id="cb12-15" data-line-number="15"><span class="co">#' str_detect(fruit, &quot;^a&quot;)</span></a>
-<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="co">#' str_detect(fruit, &quot;a$&quot;)</span></a>
-<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="co">#' str_detect(fruit, &quot;b&quot;)</span></a>
-<a class="sourceLine" id="cb12-18" data-line-number="18"><span class="co">#' str_detect(fruit, &quot;[aeiou]&quot;)</span></a>
-<a class="sourceLine" id="cb12-19" data-line-number="19">str_detect &lt;-<span class="st"> </span><span class="cf">function</span>(string, pattern) {</a>
-<a class="sourceLine" id="cb12-20" data-line-number="20">  <span class="cf">switch</span>(<span class="kw">type</span>(pattern),</a>
-<a class="sourceLine" id="cb12-21" data-line-number="21">    <span class="dt">empty =</span> ,</a>
-<a class="sourceLine" id="cb12-22" data-line-number="22">    <span class="dt">bound =</span> <span class="kw">str_count</span>(string, pattern) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>,</a>
-<a class="sourceLine" id="cb12-23" data-line-number="23">    <span class="dt">fixed =</span> <span class="kw">stri_detect_fixed</span>(string, pattern, <span class="dt">opts_fixed =</span> <span class="kw">opts</span>(pattern)),</a>
-<a class="sourceLine" id="cb12-24" data-line-number="24">    <span class="dt">coll =</span> <span class="kw">stri_detect_coll</span>(string, pattern,</a>
-<a class="sourceLine" id="cb12-25" data-line-number="25">      <span class="dt">opts_collator =</span> <span class="kw">opts</span>(pattern)</a>
-<a class="sourceLine" id="cb12-26" data-line-number="26">    ),</a>
-<a class="sourceLine" id="cb12-27" data-line-number="27">    <span class="dt">regex =</span> <span class="kw">stri_detect_regex</span>(string, pattern, <span class="dt">opts_regex =</span> <span class="kw">opts</span>(pattern))</a>
-<a class="sourceLine" id="cb12-28" data-line-number="28">  )</a>
-<a class="sourceLine" id="cb12-29" data-line-number="29">}</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Detect the presence or absence of a pattern in a string.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Vectorised over `string` and `pattern`.</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param string Input vector. Either a character vector, or something</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;  coercible to one.</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param pattern Pattern to look for.</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A logical vector.</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @examples</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; fruit &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;, &quot;pinapple&quot;)</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;a&quot;)</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;^a&quot;)</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;a$&quot;)</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;b&quot;)</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;[aeiou]&quot;)</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>str_detect <span class="ot">&lt;-</span> <span class="cf">function</span>(string, pattern) {</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span>(<span class="fu">type</span>(pattern),</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">empty =</span> ,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">bound =</span> <span class="fu">str_count</span>(string, pattern) <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed =</span> <span class="fu">stri_detect_fixed</span>(string, pattern, <span class="at">opts_fixed =</span> <span class="fu">opts</span>(pattern)),</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">coll =</span> <span class="fu">stri_detect_coll</span>(string, pattern,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">opts_collator =</span> <span class="fu">opts</span>(pattern)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">regex =</span> <span class="fu">stri_detect_regex</span>(string, pattern, <span class="at">opts_regex =</span> <span class="fu">opts</span>(pattern))</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>We can make the unit tests <em>shell</em> file for the <code>str_match()</code> function using <code>make_tests_shells_file()</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">make_tests_shells_file</span>(<span class="st">&quot;detect&quot;</span>, <span class="dt">open =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_tests_shells_file</span>(<span class="st">&quot;detect&quot;</span>, <span class="at">open =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>This outputs a <code>test-detect.R</code> file in the <code>tests/testthat</code> folder with contents</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">  fruit &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), )</a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), )</a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), )</a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), )</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), )</a>
-<a class="sourceLine" id="cb14-8" data-line-number="8">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters), )</a>
-<a class="sourceLine" id="cb14-9" data-line-number="9">})</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), )</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), )</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), )</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), )</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), )</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters), )</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <p>which can be sensibly completed as</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">  fruit &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), <span class="kw">rep</span>(<span class="ot">TRUE</span>, <span class="dv">4</span>))</a>
-<a class="sourceLine" id="cb15-4" data-line-number="4">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="kw">rep</span>(<span class="ot">FALSE</span>, <span class="dv">3</span>)))</a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb15-6" data-line-number="6">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb15-7" data-line-number="7">  <span class="kw">expect_equal</span>(<span class="kw">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), <span class="kw">rep</span>(<span class="ot">TRUE</span>, <span class="dv">4</span>))</a>
-<a class="sourceLine" id="cb15-8" data-line-number="8">  <span class="kw">expect_equal</span>(</a>
-<a class="sourceLine" id="cb15-9" data-line-number="9">    <span class="kw">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters),</a>
-<a class="sourceLine" id="cb15-10" data-line-number="10">    letters <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;e&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;g&quot;</span>)</a>
-<a class="sourceLine" id="cb15-11" data-line-number="11">  )</a>
-<a class="sourceLine" id="cb15-12" data-line-number="12">})</a></code></pre></div>
-<pre><code>#&gt; Test passed 🎉</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), <span class="fu">rep</span>(<span class="cn">TRUE</span>, <span class="dv">4</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="dv">3</span>)))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), <span class="fu">rep</span>(<span class="cn">TRUE</span>, <span class="dv">4</span>))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    letters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;e&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;g&quot;</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<pre><code>#&gt; Test passed 🥇</code></pre>
 </div>
 <div id="cleanup" class="section level1">
 <h1>Cleanup</h1>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">knitr<span class="op">::</span>opts_knit<span class="op">$</span><span class="kw">set</span>(<span class="dt">root.dir =</span> <span class="kw">tempdir</span>(<span class="dt">check =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="cf">if</span> (fs<span class="op">::</span><span class="kw">dir_exists</span>(<span class="st">&quot;tempkg&quot;</span>)) fs<span class="op">::</span><span class="kw">dir_delete</span>(<span class="st">&quot;tempkg&quot;</span>)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">knitr<span class="op">::</span>opts_knit<span class="op">$</span><span class="kw">set</span>(<span class="dt">root.dir =</span> init_wd)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> <span class="fu">tempdir</span>(<span class="at">check =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (fs<span class="sc">::</span><span class="fu">dir_exists</span>(<span class="st">&quot;tempkg&quot;</span>)) fs<span class="sc">::</span><span class="fu">dir_delete</span>(<span class="st">&quot;tempkg&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> init_wd)</span></code></pre></div>
 </div>
 
 
