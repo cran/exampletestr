@@ -1,7 +1,7 @@
 Type: Package
 Package: exampletestr
 Title: Help for Writing Unit Tests Based on Function Examples
-Version: 1.6.4
+Version: 1.6.5
 Authors@R: 
     c(person(given = "Rory",
              family = "Nolan",
@@ -43,10 +43,10 @@ Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-08-02 00:44:33 UTC; rnolan
+Packaged: 2021-08-07 21:09:55 UTC; rnolan
 Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Sergi Padilla-Parra [ths] (<https://orcid.org/0000-0002-8010-9481>),
   Thomas Quinn [rev] (<https://orcid.org/0000-0003-0286-6329>),
   Laurent Gatto [rev] (<https://orcid.org/0000-0002-1520-2268>)
 Repository: CRAN
-Date/Publication: 2021-08-02 04:20:06 UTC
+Date/Publication: 2021-08-08 22:30:02 UTC
