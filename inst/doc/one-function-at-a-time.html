@@ -349,82 +349,82 @@ examples in a single function’s documentation.</p>
 <p>First, let’s set up a dummy package called <code>tempkg</code> with
 just the <code>detect.R</code> and <code>match.R</code> files from the
 source code of the <code>stringr</code> package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_package</span>(<span class="st">&quot;tempkg&quot;</span>, <span class="at">open =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">file_copy</span>(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;detect.R&quot;</span>, <span class="st">&quot;match.R&quot;</span>), <span class="at">package =</span> <span class="st">&quot;exampletestr&quot;</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;tempkg/R/&quot;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_package</span>(<span class="st">&quot;tempkg&quot;</span>, <span class="at">open =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">file_copy</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;detect.R&quot;</span>, <span class="st">&quot;match.R&quot;</span>), <span class="at">package =</span> <span class="st">&quot;exampletestr&quot;</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="st">&quot;tempkg/R/&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>Now let’s move into the <code>tempkg</code> directory:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;tempkg/&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;tempkg/&quot;</span>)</span></code></pre></div>
 <p>and set the active project:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">proj_set</span>(<span class="st">&quot;.&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">proj_set</span>(<span class="st">&quot;.&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; ✔ Setting active project to &#39;/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpPdOSWX/tempkg&#39;</code></pre>
 </div>
 <div id="main-event" class="section level1">
 <h1>Main event</h1>
 <p>The <code>detect.R</code> file looks like this (well, I’ve
 abbreviated it slightly):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Detect the presence or absence of a pattern in a string.</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Vectorised over `string` and `pattern`.</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param string Input vector. Either a character vector, or something</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;  coercible to one.</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param pattern Pattern to look for.</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A logical vector.</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @examples</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; fruit &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;, &quot;pinapple&quot;)</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;a&quot;)</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;^a&quot;)</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;a$&quot;)</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;b&quot;)</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;[aeiou]&quot;)</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>str_detect <span class="ot">&lt;-</span> <span class="cf">function</span>(string, pattern) {</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span>(<span class="fu">type</span>(pattern),</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">empty =</span> ,</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">bound =</span> <span class="fu">str_count</span>(string, pattern) <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed =</span> <span class="fu">stri_detect_fixed</span>(string, pattern, <span class="at">opts_fixed =</span> <span class="fu">opts</span>(pattern)),</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">coll =</span> <span class="fu">stri_detect_coll</span>(string, pattern, <span class="at">opts_collator =</span> <span class="fu">opts</span>(pattern)),</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">regex =</span> <span class="fu">stri_detect_regex</span>(string, pattern, <span class="at">opts_regex =</span> <span class="fu">opts</span>(pattern))</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co">#&#39; Detect the presence or absence of a pattern in a string.</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&#39; Vectorised over `string` and `pattern`.</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&#39; @param string Input vector. Either a character vector, or something</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&#39;  coercible to one.</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&#39; @param pattern Pattern to look for.</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&#39; @return A logical vector.</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&#39; @examples</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&#39; fruit &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;, &quot;pinapple&quot;)</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;a&quot;)</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;^a&quot;)</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;a$&quot;)</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;b&quot;)</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&#39; str_detect(fruit, &quot;[aeiou]&quot;)</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>str_detect <span class="ot">&lt;-</span> <span class="cf">function</span>(string, pattern) {</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>  <span class="cf">switch</span>(<span class="fu">type</span>(pattern),</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>    <span class="at">empty =</span> ,</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>    <span class="at">bound =</span> <span class="fu">str_count</span>(string, pattern) <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>    <span class="at">fixed =</span> <span class="fu">stri_detect_fixed</span>(string, pattern, <span class="at">opts_fixed =</span> <span class="fu">opts</span>(pattern)),</span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a>    <span class="at">coll =</span> <span class="fu">stri_detect_coll</span>(string, pattern, <span class="at">opts_collator =</span> <span class="fu">opts</span>(pattern)),</span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>    <span class="at">regex =</span> <span class="fu">stri_detect_regex</span>(string, pattern, <span class="at">opts_regex =</span> <span class="fu">opts</span>(pattern))</span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a>  )</span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a>}</span></code></pre></div>
 <p>We can make the unit tests <em>shell</em> file for the
 <code>str_match()</code> function using
 <code>make_test_shell_fun()</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_test_shell_fun</span>(<span class="st">&quot;str_detect&quot;</span>, <span class="at">open =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">make_test_shell_fun</span>(<span class="st">&quot;str_detect&quot;</span>, <span class="at">open =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>This outputs a <code>test-str_detect-examples.R</code> file in the
 <code>tests/testthat</code> folder with contents</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), )</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), )</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), )</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), )</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), )</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters), )</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), )</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), )</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), )</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), )</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), )</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters), )</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>})</span></code></pre></div>
 <p>which can be sensibly completed as</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), <span class="fu">rep</span>(<span class="cn">TRUE</span>, <span class="dv">4</span>))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="dv">3</span>)))</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>))</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>))</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), <span class="fu">rep</span>(<span class="cn">TRUE</span>, <span class="dv">4</span>))</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters),</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    letters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;e&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;g&quot;</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;`str_detect()` works&quot;</span>, {</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;banana&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;pinapple&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a&quot;</span>), <span class="fu">rep</span>(<span class="cn">TRUE</span>, <span class="dv">4</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;^a&quot;</span>), <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="dv">3</span>)))</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;a$&quot;</span>), <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;b&quot;</span>), <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">str_detect</span>(fruit, <span class="st">&quot;[aeiou]&quot;</span>), <span class="fu">rep</span>(<span class="cn">TRUE</span>, <span class="dv">4</span>))</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="fu">expect_equal</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>    <span class="fu">str_detect</span>(<span class="st">&quot;aecfg&quot;</span>, letters),</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>    letters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;e&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;g&quot;</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  )</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>})</span></code></pre></div>
 </div>
 <div id="roxytest-functionality" class="section level1">
 <h1>Roxytest functionality</h1>
 <p>Alternatively, we can use the <code>roxytest</code> (<a href="https://github.com/mikldk/roxytest" class="uri">https://github.com/mikldk/roxytest</a>) package’s
 <code>@testexamples</code> roxygen tag for testing examples.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_test_shell_fun</span>(<span class="st">&quot;str_detect&quot;</span>, <span class="at">roxytest =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">make_test_shell_fun</span>(<span class="st">&quot;str_detect&quot;</span>, <span class="at">roxytest =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>#&gt; ℹ Running `roxygen2::roxygenize` . . .</code></pre>
 <pre><code>#&gt; Updating roxygen version in /private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpPdOSWX/tempkg/DESCRIPTION</code></pre>
 <pre><code>#&gt; Loading tempkg</code></pre>
@@ -448,9 +448,9 @@ the RStudio addin <em>Copy roxytest <span class="citation">@testexamples</span> 
 </div>
 <div id="cleanup" class="section level1">
 <h1>Cleanup</h1>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> <span class="fu">tempdir</span>(<span class="at">check =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (fs<span class="sc">::</span><span class="fu">dir_exists</span>(<span class="st">&quot;tempkg&quot;</span>)) fs<span class="sc">::</span><span class="fu">dir_delete</span>(<span class="st">&quot;tempkg&quot;</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> init_wd)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> <span class="fu">tempdir</span>(<span class="at">check =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="cf">if</span> (fs<span class="sc">::</span><span class="fu">dir_exists</span>(<span class="st">&quot;tempkg&quot;</span>)) fs<span class="sc">::</span><span class="fu">dir_delete</span>(<span class="st">&quot;tempkg&quot;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> init_wd)</span></code></pre></div>
 </div>
 
 

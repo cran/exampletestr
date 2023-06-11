@@ -1,7 +1,7 @@
 Type: Package
 Package: exampletestr
 Title: Help for Writing Unit Tests Based on Function Examples
-Version: 1.7.0
+Version: 1.7.1
 Authors@R: 
     c(person(given = "Rory",
              family = "Nolan",
@@ -41,12 +41,12 @@ VignetteBuilder: knitr
 Config/testthat/edition: 2
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2022-12-06 18:37:05 UTC; rnolan
+Packaged: 2023-06-11 02:53:48 UTC; rorynolan
 Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Sergi Padilla-Parra [ths] (<https://orcid.org/0000-0002-8010-9481>),
   Thomas Quinn [rev] (<https://orcid.org/0000-0003-0286-6329>),
   Laurent Gatto [rev] (<https://orcid.org/0000-0002-1520-2268>)
 Repository: CRAN
-Date/Publication: 2022-12-06 19:20:02 UTC
+Date/Publication: 2023-06-11 03:10:02 UTC
