@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2024-08-17" />
+<meta name="date" content="2024-10-07" />
 
 <title>One .R file at a time</title>
 
@@ -50,7 +50,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -61,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -338,7 +338,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">One .R file at a time</h1>
-<h4 class="date">2024-08-17</h4>
+<h4 class="date">2024-10-07</h4>
 
 
 
@@ -352,7 +352,7 @@ source code of the <code>stringr</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_package</span>(<span class="st">&quot;tempkg&quot;</span>, <span class="at">open =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <pre><code>#&gt; ✔ Creating &#39;tempkg/&#39;.</code></pre>
 <pre><code>#&gt; ✔ Setting active project to
-#&gt;   &quot;/private/var/folders/m1/sq5nmr5x2cj0t6f8wscs1wqm0000gp/T/RtmpTBiHqN/tempkg&quot;.</code></pre>
+#&gt;   &quot;/private/var/folders/m1/sq5nmr5x2cj0t6f8wscs1wqm0000gp/T/Rtmp0gPG06/tempkg&quot;.</code></pre>
 <pre><code>#&gt; ✔ Creating &#39;R/&#39;.</code></pre>
 <pre><code>#&gt; ✔ Writing &#39;DESCRIPTION&#39;.</code></pre>
 <pre><code>#&gt; ✔ Writing &#39;NAMESPACE&#39;.</code></pre>
@@ -366,7 +366,7 @@ source code of the <code>stringr</code> package.</p>
 <p>and set the active project:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">proj_set</span>(<span class="st">&quot;.&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; ✔ Setting active project to
-#&gt;   &quot;/private/var/folders/m1/sq5nmr5x2cj0t6f8wscs1wqm0000gp/T/RtmpTBiHqN/tempkg&quot;.</code></pre>
+#&gt;   &quot;/private/var/folders/m1/sq5nmr5x2cj0t6f8wscs1wqm0000gp/T/Rtmp0gPG06/tempkg&quot;.</code></pre>
 </div>
 <div id="main-event" class="section level1">
 <h1>Main event</h1>
@@ -429,7 +429,7 @@ abbreviated it slightly):</p>
 <span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>    letters <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;e&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;g&quot;</span>)</span>
 <span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>  )</span>
 <span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>})</span></code></pre></div>
-<pre><code>#&gt; Test passed 😀</code></pre>
+<pre><code>#&gt; Test passed 🎊</code></pre>
 </div>
 <div id="cleanup" class="section level1">
 <h1>Cleanup</h1>
